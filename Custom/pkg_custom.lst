@@ -8,3 +8,4 @@ ttf-jetbrains-mono-nerd                                # Jetbrains mono nerd fon
 file-roller                                            # Archive manager
 zathura                                                # PDF viewer
 zathura-pdf-mupdf                                      # MuPDF backend for Zathura
+zen-browser-bin                                        # Zen Browser
