@@ -4,3 +4,4 @@ code                                                   # Visual Studio Code IDE
 visual-studio-code-bin                                 # Alternative package names for VS Code
 vscode-bin                                             # Alternative package names for VS Code
 ark                                                    # KDE archive manager
+firefox                                                # Mozilla Firefox browser
