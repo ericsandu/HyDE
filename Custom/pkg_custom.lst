@@ -5,3 +5,4 @@ tumbler                                                # Thumbnail support for T
 neovim                                                 # Neovim text editor
 ttf-nerd-font-symbols                                  # Nerd font symbols
 ttf-jetbrains-mono-nerd                                # Jetbrains mono nerd font
+file-roller                                            # Archive manager
