@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+
+scrDir=$(dirname "$(realpath "$0")")
+
+# Stage package blacklist
+cp -f "${scrDir}/Custom/pkg_black.lst" "${scrDir}/Scripts/pkg_black.lst"
+
+# Run main HyDE installer with custom packages
+"${scrDir}/Scripts/install.sh" "$@" "${scrDir}/Custom/pkg_custom.lst"
+
+# Set Thunar as default file manager
+if command -v xdg-mime >/dev/null 2>&1; then
+    xdg-mime default thunar.desktop inode/directory
+fi
+
+# Install custom Neovim configuration
+NVIM_CONFIG_REPO="" 
+if [ -n "${NVIM_CONFIG_REPO}" ]; then
+    rm -rf "${HOME}/.config/nvim"
+    git clone "${NVIM_CONFIG_REPO}" "${HOME}/.config/nvim"
+fi
+
+# Deploy custom dotfiles
+if [ -d "${scrDir}/Custom/dotfiles/.config" ]; then
+    mkdir -p "${HOME}/.config"
+    cp -rf "${scrDir}/Custom/dotfiles/.config"/* "${HOME}/.config/"
+fi
+if [ -d "${scrDir}/Custom/dotfiles/.local" ]; then
+    mkdir -p "${HOME}/.local"
+    cp -rf "${scrDir}/Custom/dotfiles/.local"/* "${HOME}/.local/"
+fi
+if [ -f "${scrDir}/Custom/dotfiles/.gtkrc-2.0" ]; then
+    cp -f "${scrDir}/Custom/dotfiles/.gtkrc-2.0" "${HOME}/.gtkrc-2.0"
+fi
+if [ -f "${scrDir}/Custom/dotfiles/.zshenv" ]; then
+    cp -f "${scrDir}/Custom/dotfiles/.zshenv" "${HOME}/.zshenv"
+fi
+
+
+# Compile Waybar custom configuration
+if command -v waybar.py >/dev/null 2>&1; then
+    waybar.py --update || true
+elif [ -f "${HOME}/.local/lib/hyde/waybar.py" ]; then
+    "${HOME}/.local/lib/hyde/waybar.py" --update || true
+fi
