@@ -53,7 +53,8 @@ if [[ "$install_tlp" =~ ^[Yy]$ ]]; then
     echo ":: Installing and configuring TLP for power management..."
     yay -S --noconfirm tlp
     if [ -f "${scrDir}/Custom/tlp.conf" ]; then
-        sudo cp -f "${scrDir}/Custom/tlp.conf" /etc/tlp.conf
+        sudo mkdir -p /etc/tlp.d
+        sudo cp -f "${scrDir}/Custom/tlp.conf" /etc/tlp.d/99-custom.conf
     fi
     sudo systemctl enable tlp.service
     sudo tlp start || true
