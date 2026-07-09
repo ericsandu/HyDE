@@ -9,3 +9,9 @@ file-roller                                            # Archive manager
 zathura                                                # PDF viewer
 zathura-pdf-mupdf                                      # MuPDF backend for Zathura
 zen-browser-bin                                        # Zen Browser
+bat                                                    # Cat clone with syntax highlighting
+fd                                                     # Faster find alternative
+mpv                                                    # Minimal video player
+yt-dlp                                                 # YouTube and video downloader
+imv                                                    # Wayland image viewer
+btop                                                   # System monitor
