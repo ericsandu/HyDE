@@ -1,0 +1,7 @@
+# Custom packages to add to the installation queue
+thunar                                                 # Thunar file manager
+gvfs                                                   # Trash and mount support for Thunar
+tumbler                                                # Thumbnail support for Thunar
+neovim                                                 # Neovim text editor
+ttf-nerd-font-symbols                                  # Nerd font symbols
+ttf-jetbrains-mono-nerd                                # Jetbrains mono nerd font
