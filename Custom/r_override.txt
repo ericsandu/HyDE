@@ -1,0 +1,3 @@
+# TBD: Make a regex that replaces the r_override variable inside "~/.local/lib/hyde/rofilaunch.sh" with this one
+
+r_override="window {border: ${hypr_width}px; border-radius: ${wind_border}px; location: south east; anchor: south east; x-offset: -10px; y-offset: -10px;} element {border-radius: ${elem_border}px;}"
