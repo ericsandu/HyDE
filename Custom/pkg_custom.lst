@@ -7,7 +7,7 @@ ttf-nerd-font-symbols                                  # Nerd font symbols
 ttf-jetbrains-mono-nerd                                # Jetbrains mono nerd font
 file-roller                                            # Archive manager
 zathura                                                # PDF viewer
-zathura-pdf-mupdf                                      # MuPDF backend for Zathura
+zathura-pdf-poppler                                    # Poppler backend for Zathura
 zen-browser-bin                                        # Zen Browser
 bat                                                    # Cat clone with syntax highlighting
 fd                                                     # Faster find alternative
