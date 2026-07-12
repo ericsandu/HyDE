@@ -97,17 +97,21 @@ end
 end
 end
 
-# # fzf
-# if type -q fzf
-#     fzf --fish | source
-#     for file in ~/.config/fish/functions/fzf/*.fish
-#         source $file
-#         # NOTE: these functions are built on top of fzf builtin widgets
-#         # they help you navigate through directories and files "Blazingly" fast
-#         # to get help on each one, just type `ff` in terminal and press `TAB`
-#         # keep in mind all of them require an argument to be passed after the alias
-#     end
-# end
+# fzf
+if type -q fzf
+    fzf --fish | source
+    for file in ~/.config/fish/functions/fzf/*.fish
+        source $file
+        # NOTE: these functions are built on top of fzf builtin widgets
+        # they help you navigate through directories and files "Blazingly" fast
+        # to get help on each one, just type `ff` in terminal and press `TAB`
+        # keep in mind all of them require an argument to be passed after the alias
+    end
+    
+    # Use ffch for Ctrl+R to get sequential numbering instead of timestamps
+    bind \cr ffch
+    bind -M insert \cr ffch
+end
 
 
 # NOTE: binds Alt+n to inserting the nth command from history in edit buffer

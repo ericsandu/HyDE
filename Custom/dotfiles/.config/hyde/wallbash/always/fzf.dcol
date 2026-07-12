@@ -1,0 +1,13 @@
+${cacheDir}/wallbash/fzf.sh|bash ${cacheDir}/wallbash/fzf.sh
+#!/usr/bin/env bash
+
+# We use fish to clean existing color flags and append the new ones as a Universal Variable
+fish -c '
+set -l clean_opts (string replace -r --all -- "--color=[^ ]+" "" "$FZF_DEFAULT_OPTS")
+set -Ux FZF_DEFAULT_OPTS "$clean_opts \
+--color=bg+:#<wallbash_1xa2>,bg:#<wallbash_pry1>,spinner:#<wallbash_pry3>,hl:#<wallbash_pry2> \
+--color=fg:#<wallbash_txt1>,header:#<wallbash_pry2>,info:#<wallbash_pry3>,pointer:#<wallbash_txt1> \
+--color=marker:#<wallbash_pry3>,fg+:#<wallbash_txt1>,prompt:#<wallbash_pry3>,hl+:#<wallbash_pry3> \
+--color=selected-bg:#<wallbash_1xa1> \
+--color=border:#<wallbash_1xa3>,label:#<wallbash_txt1>"
+'
