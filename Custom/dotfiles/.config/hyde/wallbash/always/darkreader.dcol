@@ -1,4 +1,4 @@
-${cacheDir}/wallbash/darkreader.sh|bash "${cacheDir}/wallbash/darkreader.sh"
+${cacheDir}/wallbash/darkreader.sh|bash ${cacheDir}/wallbash/darkreader.sh
 #!/usr/bin/env bash
 
 # We use a script to handle paths with spaces safely
