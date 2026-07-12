@@ -1,0 +1,30 @@
+${cacheDir}/wallbash/darkreader.sh|bash "${cacheDir}/wallbash/darkreader.sh"
+#!/usr/bin/env bash
+
+# We use a script to handle paths with spaces safely
+profile_dir="$HOME/.config/zen/oxq5gthd.Default (release)/browser-extension-data/addon@darkreader.org"
+mkdir -p "$profile_dir"
+cat << 'EOF' > "$profile_dir/storage.js"
+{
+  "theme": {
+    "mode": 1,
+    "brightness": 100,
+    "contrast": 100,
+    "grayscale": 0,
+    "sepia": 0,
+    "useFont": false,
+    "fontFamily": "Open Sans",
+    "textStroke": 0,
+    "engine": "dynamicTheme",
+    "stylesheet": "",
+    "darkSchemeBackgroundColor": "#<wallbash_pry1>",
+    "darkSchemeTextColor": "#<wallbash_txt1>",
+    "selectionColor": "#<wallbash_1xa8>",
+    "lightSchemeBackgroundColor": "#dcdad7",
+    "lightSchemeTextColor": "#181a1b",
+    "scrollbarColor": "auto",
+    "darkColorScheme": "Default",
+    "lightColorScheme": "Default"
+  }
+}
+EOF
