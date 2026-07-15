@@ -28,8 +28,11 @@ local colors = {
 local hl = vim.api.nvim_set_hl
 
 -- Base highlights
-hl(0, "Normal", { bg = colors.bg, fg = colors.fg })
-hl(0, "NormalFloat", { bg = colors.bg2, fg = colors.fg2 })
+hl(0, "Normal", { bg = "NONE", fg = colors.fg })
+hl(0, "NormalFloat", { bg = "NONE", fg = colors.fg2 })
+hl(0, "NormalNC", { bg = "NONE", fg = colors.fg })
+hl(0, "FloatBorder", { bg = "NONE", fg = colors.bg3 })
+hl(0, "FloatTitle", { bg = "NONE", fg = colors.accent1 })
 hl(0, "Comment", { fg = colors.bg3, italic = true })
 hl(0, "Keyword", { fg = colors.accent1, bold = true })
 hl(0, "Function", { fg = colors.accent3 })
@@ -61,7 +64,7 @@ hl(0, "LineNr", { fg = colors.bg3 })
 hl(0, "CursorLine", { bg = colors.bg2 })
 hl(0, "CursorLineNr", { fg = colors.accent1, bold = true })
 hl(0, "ColorColumn", { bg = colors.bg2 })
-hl(0, "SignColumn", { bg = colors.bg })
+hl(0, "SignColumn", { bg = "NONE" })
 hl(0, "VertSplit", { fg = colors.bg3 })
 hl(0, "StatusLine", { bg = colors.bg2, fg = colors.fg2 })
 hl(0, "StatusLineNC", { bg = colors.bg, fg = colors.bg3 })
@@ -86,7 +89,18 @@ hl(0, "LspReferenceWrite", { bg = colors.bg3 })
 hl(0, "MatchParen", { bg = colors.accent3, fg = colors.bg, bold = true })
 
 -- Neo-tree / NvimTree
-hl(0, "NeoTreeNormal", { bg = colors.bg, fg = colors.fg })
-hl(0, "NeoTreeNormalNC", { bg = colors.bg, fg = colors.fg })
-hl(0, "NvimTreeNormal", { bg = colors.bg, fg = colors.fg })
-hl(0, "NvimTreeNormalNC", { bg = colors.bg, fg = colors.fg })
+hl(0, "NeoTreeNormal", { bg = "NONE", fg = colors.fg })
+hl(0, "NeoTreeNormalNC", { bg = "NONE", fg = colors.fg })
+hl(0, "NvimTreeNormal", { bg = "NONE", fg = colors.fg })
+hl(0, "NvimTreeNormalNC", { bg = "NONE", fg = colors.fg })
+
+-- Snacks
+hl(0, "SnacksNormal", { bg = "NONE", fg = colors.fg })
+hl(0, "SnacksPickerNormal", { bg = "NONE", fg = colors.fg })
+hl(0, "SnacksPickerList", { bg = "NONE", fg = colors.fg })
+hl(0, "SnacksPickerPreview", { bg = "NONE", fg = colors.fg })
+hl(0, "SnacksPickerBorder", { bg = "NONE", fg = colors.bg3 })
+
+-- Terminal
+hl(0, "TermNormal", { bg = "NONE", fg = colors.fg })
+hl(0, "TermNormalNC", { bg = "NONE", fg = colors.fg })
