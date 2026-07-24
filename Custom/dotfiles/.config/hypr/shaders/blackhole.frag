@@ -24,13 +24,18 @@ void main() {
     // Only apply the gravitational lensing/swirl within the effect radius
     if (dist < effect_radius) {
         // Smooth falloff: the effect gradually fades out to 0 at the effect_radius
-        float falloff = smoothstep(effect_radius, 0.05, dist);
+        float falloff = smoothstep(effect_radius, 0.02, dist);
         
-        // Swirl speed: spins significantly faster the closer you get to the event horizon (dist ~ 0)
-        float speed = 1.0 / (dist + 0.05); 
+        // Swirl speed: spins faster closer to the center
+        float speed = 1.0 / (dist + 0.1); 
         
-        // Calculate the rotational angle over time
-        float angle = time * 0.15 * speed * falloff;
+        // Asymptotic twist: starts fast and exponentially slows down to a complete halt
+        // after reaching the maximum twist threshold (approx 2-3 rotations at the center)
+        float max_twist = 12.0;
+        float current_twist = max_twist * (1.0 - exp(-time * 0.2));
+        
+        // Calculate the final rotational angle
+        float angle = current_twist * speed * falloff * 0.08;
         
         float s = sin(angle);
         float c = cos(angle);
