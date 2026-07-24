@@ -19,11 +19,31 @@ local colors = {
   accent2 = "#<wallbash_2xa8>",
   accent3 = "#<wallbash_3xa8>",
   accent4 = "#<wallbash_4xa8>",
-  error = "#<wallbash_1xa9>",
-  warn = "#<wallbash_3xa9>",
-  info = "#<wallbash_2xa9>",
-  hint = "#<wallbash_4xa9>",
+  error = "#<wallbash_1xa8>",
+  warn = "#<wallbash_3xa8>",
+  info = "#<wallbash_2xa8>",
+  hint = "#<wallbash_4xa8>",
 }
+
+-- Color blending utility to force high contrast between syntax elements
+local function hex2rgb(hex)
+  return tonumber(hex:sub(2, 3), 16), tonumber(hex:sub(4, 5), 16), tonumber(hex:sub(6, 7), 16)
+end
+local function rgb2hex(r, g, b)
+  return string.format("#%02x%02x%02x", r, g, b)
+end
+local function blend(hex1, hex2, alpha)
+  local r1, g1, b1 = hex2rgb(hex1)
+  local r2, g2, b2 = hex2rgb(hex2)
+  local r = math.min(255, math.max(0, math.floor(r1 * alpha + r2 * (1 - alpha))))
+  local g = math.min(255, math.max(0, math.floor(g1 * alpha + g2 * (1 - alpha))))
+  local b = math.min(255, math.max(0, math.floor(b1 * alpha + b2 * (1 - alpha))))
+  return rgb2hex(r, g, b)
+end
+
+-- Generate blended derivative colors strictly for unassigned/edge-case syntax elements
+local c_mixed_type = blend(colors.accent2, colors.accent3, 0.6) -- Purple/Yellow mix for StorageClass/builtins
+local c_mixed_var  = blend(colors.accent3, colors.accent2, 0.5) -- Mixed accent for parameters
 
 local hl = vim.api.nvim_set_hl
 
@@ -35,29 +55,62 @@ hl(0, "FloatBorder", { bg = "NONE", fg = colors.bg3 })
 hl(0, "FloatTitle", { bg = "NONE", fg = colors.accent1 })
 hl(0, "Comment", { fg = colors.bg3, italic = true })
 hl(0, "Keyword", { fg = colors.accent1, bold = true })
-hl(0, "Function", { fg = colors.accent3 })
+hl(0, "Function", { fg = colors.accent3, bold = true })
 hl(0, "String", { fg = colors.accent4 })
 hl(0, "Number", { fg = colors.accent4 })
 hl(0, "Type", { fg = colors.accent2 })
 hl(0, "Identifier", { fg = colors.fg })
 hl(0, "Statement", { fg = colors.accent1 })
+hl(0, "Conditional", { link = "Statement" })
+hl(0, "Repeat", { link = "Statement" })
+hl(0, "Label", { link = "Statement" })
+hl(0, "Exception", { link = "Statement" })
+
 hl(0, "Constant", { fg = colors.accent4 })
+hl(0, "Boolean", { link = "Constant" })
+hl(0, "Float", { link = "Number" })
+
 hl(0, "Operator", { fg = colors.accent3 })
+hl(0, "Special", { fg = colors.accent3 })
+
 hl(0, "PreProc", { fg = colors.accent1 })
+hl(0, "Include", { link = "PreProc" })
+hl(0, "Macro", { link = "PreProc" })
+hl(0, "PreCondit", { link = "PreProc" })
+
+hl(0, "Type", { fg = colors.accent2 })
+hl(0, "StorageClass", { fg = c_mixed_type })
+hl(0, "Structure", { link = "Type" })
+hl(0, "Typedef", { link = "Type" })
 
 -- Treesitter highlights
 hl(0, "@comment", { link = "Comment" })
 hl(0, "@keyword", { link = "Keyword" })
+hl(0, "@keyword.function", { link = "Keyword" })
+hl(0, "@keyword.return", { link = "Keyword" })
+hl(0, "@keyword.operator", { link = "Keyword" })
 hl(0, "@function", { link = "Function" })
+hl(0, "@function.builtin", { link = "Function" })
+hl(0, "@function.macro", { link = "Macro" })
 hl(0, "@string", { link = "String" })
 hl(0, "@variable", { link = "Identifier" })
+hl(0, "@variable.builtin", { link = "Identifier" })
+hl(0, "@variable.parameter", { fg = c_mixed_var, italic = true })
 hl(0, "@type", { link = "Type" })
+hl(0, "@type.builtin", { fg = c_mixed_type })
 hl(0, "@constant", { link = "Constant" })
+hl(0, "@constant.builtin", { link = "Constant" })
 hl(0, "@operator", { link = "Operator" })
 hl(0, "@property", { fg = colors.accent2 })
-hl(0, "@parameter", { fg = colors.accent3 })
+hl(0, "@parameter", { fg = c_mixed_var, italic = true })
 hl(0, "@tag", { fg = colors.accent1 })
 hl(0, "@tag.attribute", { fg = colors.accent2 })
+hl(0, "@conditional", { link = "Conditional" })
+hl(0, "@repeat", { link = "Repeat" })
+hl(0, "@include", { link = "Include" })
+hl(0, "@punctuation", { fg = colors.bg3 })
+hl(0, "@punctuation.delimiter", { fg = colors.bg3 })
+hl(0, "@punctuation.bracket", { fg = colors.bg3 })
 
 -- UI elements
 hl(0, "LineNr", { fg = colors.bg3 })
