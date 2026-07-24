@@ -24,8 +24,12 @@ if [[ "$install_tlp" =~ ^[Yy]$ ]]; then
     sudo mkdir -p /etc/tlp.d
     sudo cp -f "${scrDir}/Custom/tlp.conf" /etc/tlp.d/99-custom.conf
   fi
-  sudo systemctl enable tlp.service
-  sudo tlp start || true
+  if ! sudo systemctl enable tlp.service 2>/dev/null; then
+    echo ":: Warning: DBUS/systemctl unavailable. The script will continue."
+    echo ":: ACTION REQUIRED: Please run 'sudo systemctl enable --now tlp.service' manually after rebooting."
+  else
+    sudo tlp start || echo ":: Warning: Failed to start TLP immediately. It will start on next boot."
+  fi
 else
   echo ":: Skipping TLP power management installation."
 fi
