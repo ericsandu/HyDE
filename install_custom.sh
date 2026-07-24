@@ -9,6 +9,8 @@ install_tlp=${install_tlp:-N}
 # Stage package blacklist
 cp -f "${scrDir}/Custom/pkg_black.lst" "${scrDir}/Scripts/pkg_black.lst"
 
+
+
 # Run main HyDE installer with custom packages
 "${scrDir}/Scripts/install.sh" "$@" "${scrDir}/Custom/pkg_custom.lst"
 
@@ -17,12 +19,7 @@ if command -v xdg-mime >/dev/null 2>&1; then
   xdg-mime default thunar.desktop inode/directory
 fi
 
-# Install custom Neovim configuration
-NVIM_CONFIG_REPO="https://github.com/ericsandu/lazyvim"
-if [ -n "${NVIM_CONFIG_REPO}" ]; then
-  rm -rf "${HOME}/.config/nvim"
-  git clone "${NVIM_CONFIG_REPO}" "${HOME}/.config/nvim"
-fi
+
 
 
 
@@ -59,4 +56,23 @@ if [ -f "${scrDir}/Custom/dotfiles/.gtkrc-2.0" ]; then
 fi
 if [ -f "${scrDir}/Custom/dotfiles/.zshenv" ]; then
   cp -f "${scrDir}/Custom/dotfiles/.zshenv" "${HOME}/.zshenv"
+fi
+
+# Install custom Neovim configuration
+NVIM_CUSTOM_REPO=${NVIM_CUSTOM_REPO:-"https://github.com/ericsandu/lazyvim"}
+if [ -n "${NVIM_CUSTOM_REPO}" ]; then
+  if [ -d "${HOME}/.config/nvim" ] && [ "$(ls -A "${HOME}/.config/nvim" 2>/dev/null)" ]; then
+    read -p ":: Directory ~/.config/nvim is not empty. Remove contents and install custom Neovim configuration? [y/N]: " nvim_confirm
+    nvim_confirm=${nvim_confirm:-N}
+  else
+    nvim_confirm="Y"
+  fi
+
+  if [[ "$nvim_confirm" =~ ^[Yy]$ ]]; then
+    echo ":: Installing custom Neovim configuration..."
+    rm -rf "${HOME}/.config/nvim"
+    git clone "${NVIM_CUSTOM_REPO}" "${HOME}/.config/nvim"
+  else
+    echo ":: Skipping custom Neovim configuration."
+  fi
 fi
