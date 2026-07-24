@@ -141,7 +141,7 @@ hl(0, "TermCursor", { bg = colors.fg, fg = colors.bg })
 hl(0, "LspReferenceText", { bg = c_selection })
 hl(0, "LspReferenceRead", { bg = c_selection })
 hl(0, "LspReferenceWrite", { bg = c_selection })
-hl(0, "MatchParen", { bg = colors.accent3, fg = colors.bg, bold = true })
+hl(0, "MatchParen", { fg = colors.accent3, bg = colors.bg2, bold = true })
 
 -- Neo-tree / NvimTree
 hl(0, "NeoTreeNormal", { bg = "NONE", fg = colors.fg })
