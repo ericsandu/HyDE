@@ -54,9 +54,8 @@
         "orientation": "inherit",
         "modules": [
             "custom/updates",
-            "cpu",
-            "temperature",
-            "custom/sensorsinfo"
+            "custom/cpuinfo",
+            "custom/gpuinfo"
         ]
     },
     "group/leaf#right3": {
