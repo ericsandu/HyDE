@@ -2,9 +2,6 @@
 
 scrDir=$(dirname "$(realpath "$0")")
 
-# Prompt for power management
-read -p "Do you want to install and configure TLP for maximum power savings? (Useful for laptops) [y/N]: " install_tlp
-install_tlp=${install_tlp:-N}
 
 # Stage package blacklist
 cp -f "${scrDir}/Custom/pkg_black.lst" "${scrDir}/Scripts/pkg_black.lst"
@@ -31,6 +28,9 @@ elif [ -f "${HOME}/.local/lib/hyde/waybar.py" ]; then
 fi
 
 # Deploy TLP if requested
+read -p ":: Do you want to install and configure TLP for maximum power savings? (Useful for laptops) [y/N]: " install_tlp
+install_tlp=${install_tlp:-N}
+
 if [[ "$install_tlp" =~ ^[Yy]$ ]]; then
   echo ":: Installing and configuring TLP for power management..."
   yay -S --noconfirm tlp
@@ -40,6 +40,8 @@ if [[ "$install_tlp" =~ ^[Yy]$ ]]; then
   fi
   sudo systemctl enable tlp.service
   sudo tlp start || true
+else
+  echo ":: Skipping TLP power management installation."
 fi
 
 # Deploy custom dotfiles
