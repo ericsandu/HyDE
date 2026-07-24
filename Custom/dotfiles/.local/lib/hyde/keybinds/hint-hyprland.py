@@ -1,4 +1,17 @@
 #! /usr/bin/env python3
+
+# ==============================================================================
+# TEMPORARY HYPRLAND JSON BUG PATCH
+# ==============================================================================
+# NOTE: This file is overriding the default HyDE hint-hyprland.py to fix a 
+# malformed JSON output bug in `hyprctl binds -j` (unquoted keycodes and 
+# description hijacking). 
+# 
+# This issue is already fixed in Hyprland git. Once Hyprland pushes the fix 
+# to a stable release, you can simply DELETE this entire file from your 
+# Custom/dotfiles folder to fall back to the default HyDE behavior!
+# ==============================================================================
+
 import subprocess
 import json
 import argparse
