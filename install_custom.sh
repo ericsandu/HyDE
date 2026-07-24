@@ -64,8 +64,14 @@ if [ -n "${NVIM_CUSTOM_REPO}" ]; then
 fi
 
 # Compile Waybar custom configuration
-if command -v waybar.py >/dev/null 2>&1; then
-  waybar.py --update || true
-elif [ -f "${HOME}/.local/lib/hyde/waybar.py" ]; then
-  "${HOME}/.local/lib/hyde/waybar.py" --update || true
+# We check for DBus/XDG_RUNTIME_DIR to prevent the script from hanging or crashing
+# when waybar.py tries to connect to the user session bus during an offline install.
+if [ -n "$XDG_RUNTIME_DIR" ] || [ -n "$DBUS_SESSION_BUS_ADDRESS" ]; then
+  if command -v waybar.py >/dev/null 2>&1; then
+    waybar.py --update || true
+  elif [ -f "${HOME}/.local/lib/hyde/waybar.py" ]; then
+    "${HOME}/.local/lib/hyde/waybar.py" --update || true
+  fi
+else
+  echo ":: DBUS not active. Skipping Waybar live update (will run on next boot)."
 fi
