@@ -113,6 +113,11 @@ parse_includes_and_update() {
             print_log -y "Warning" " Source file not found: $source_var"
         fi
     fi
+    local dt_var
+    dt_var=$(grep -iE '^\s*//\s*!damage_tracking\s*=\s*[0-2]' "$shaders_dir/$selected_shader.frag" 2>/dev/null | head -n1 | sed -E 's/^\s*\/\/\s*!damage_tracking\s*=\s*([0-2]).*/\1/I' | xargs)
+    if [ -z "$dt_var" ]; then
+        dt_var=2
+    fi
     local inc_file="$shaders_dir/$selected_shader.inc"
     if [ -f "$inc_file" ]; then
         files+=("$inc_file")
@@ -148,6 +153,9 @@ parse_includes_and_update() {
 # path to the compiled shader // override this in '../hyde/config.toml'
 \$SCREEN_SHADER_COMPILED = $XDG_CONFIG_HOME/hypr/shaders/.compiled.cache.glsl
 
+debug {
+    damage_tracking = $dt_var
+}
 
 EOF
 }
