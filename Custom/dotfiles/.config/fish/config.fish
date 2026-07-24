@@ -15,7 +15,7 @@ fish_add_path ~/.local/bin
 fish_add_path ~/.local/share/bin
 
 set -gx ZEPHYR_SDK_INSTALL_DIR "/opt/zephyr-sdk-1.0.1"
-set -gx ZEPHYR_TOOLCHAIN_VARIANT "zephyr"
+set -gx ZEPHYR_TOOLCHAIN_VARIANT zephyr
 
 # Aliases
 # (Note: standard list directory and navigate aliases are already in hyde.fish)
@@ -26,7 +26,6 @@ alias nf='fastfetch'
 alias neofetch='fastfetch'
 alias vi='nvim'
 alias vim='nvim'
-alias cat='bat'
 alias find='fd'
 
 # Shell Enhancements
