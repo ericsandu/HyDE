@@ -9,7 +9,7 @@ out vec4 FragColor;
 
 // Configuration
 const vec2 center = vec2(0.5, 0.5); // Center of the screen (where the black hole is)
-const float effect_radius = 0.45;   // How far out the gravitational pull affects the screen
+const float effect_radius = 0.15;   // How far out the gravitational pull affects the screen
 const float aspect_ratio = 16.0 / 9.0; // Standard widescreen aspect ratio
 
 void main() {
