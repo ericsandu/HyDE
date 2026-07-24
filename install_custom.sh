@@ -48,8 +48,9 @@ if [ -n "${NVIM_CUSTOM_REPO}" ]; then
     echo ":: Installing custom Neovim configuration..."
     rm -rf "${HOME}/.config/nvim"
     git clone "${NVIM_CUSTOM_REPO}" "${HOME}/.config/nvim"
-    # Ensure the colors directory exists for Wallbash to generate wallbash.lua
+    # Ensure the directories exists for Wallbash to generate colorschemes
     mkdir -p "${HOME}/.config/nvim/colors"
+    mkdir -p "${HOME}/.config/nvim/lua/lualine/themes/"
   else
     echo ":: Skipping custom Neovim configuration."
   fi
