@@ -24,9 +24,6 @@ alias po='yay -Qtdq | yay -Rns -'
 alias ssh='kitten ssh'
 alias nf='fastfetch'
 alias neofetch='fastfetch'
-alias vi='nvim'
-alias vim='nvim'
-alias find='fd'
 
 # Shell Enhancements
 # Enable Fish Vi Mode (equivalent to zsh-vi-mode plugin)
