@@ -34,16 +34,6 @@ else
   echo ":: Skipping TLP power management installation."
 fi
 
-# Deploy custom dotfiles
-if [ -d "${scrDir}/Custom/dotfiles/.config" ]; then
-  mkdir -p "${HOME}/.config"
-  cp -rf "${scrDir}/Custom/dotfiles/.config"/* "${HOME}/.config/"
-fi
-if [ -d "${scrDir}/Custom/dotfiles/.local" ]; then
-  mkdir -p "${HOME}/.local"
-  cp -rf "${scrDir}/Custom/dotfiles/.local"/* "${HOME}/.local/"
-fi
-
 # Install custom Neovim configuration
 NVIM_CUSTOM_REPO=${NVIM_CUSTOM_REPO:-"https://github.com/ericsandu/lazyvim"}
 if [ -n "${NVIM_CUSTOM_REPO}" ]; then
@@ -63,6 +53,16 @@ if [ -n "${NVIM_CUSTOM_REPO}" ]; then
   else
     echo ":: Skipping custom Neovim configuration."
   fi
+fi
+
+# Deploy custom dotfiles
+if [ -d "${scrDir}/Custom/dotfiles/.config" ]; then
+  mkdir -p "${HOME}/.config"
+  cp -rf "${scrDir}/Custom/dotfiles/.config"/* "${HOME}/.config/"
+fi
+if [ -d "${scrDir}/Custom/dotfiles/.local" ]; then
+  mkdir -p "${HOME}/.local"
+  cp -rf "${scrDir}/Custom/dotfiles/.local"/* "${HOME}/.local/"
 fi
 
 # Compile Waybar custom configuration
