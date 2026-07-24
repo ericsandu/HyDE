@@ -44,6 +44,8 @@ end
 -- Generate blended derivative colors strictly for unassigned/edge-case syntax elements
 local c_mixed_type = blend(colors.accent2, colors.accent3, 0.6) -- Purple/Yellow mix for StorageClass/builtins
 local c_mixed_var  = blend(colors.accent3, colors.accent2, 0.5) -- Mixed accent for parameters
+local c_cursorline = blend(colors.bg2, colors.bg, 0.25)         -- Highly muted background for cursor line
+local c_selection  = blend(colors.bg3, colors.bg, 0.35)         -- Muted background for visual/menu selections
 
 local hl = vim.api.nvim_set_hl
 
@@ -114,18 +116,18 @@ hl(0, "@punctuation.bracket", { fg = colors.bg3 })
 
 -- UI elements
 hl(0, "LineNr", { fg = colors.bg3 })
-hl(0, "CursorLine", { bg = colors.bg2 })
+hl(0, "CursorLine", { bg = c_cursorline })
 hl(0, "CursorLineNr", { fg = colors.accent1, bold = true })
-hl(0, "ColorColumn", { bg = colors.bg2 })
+hl(0, "ColorColumn", { bg = c_cursorline })
 hl(0, "SignColumn", { bg = "NONE" })
 hl(0, "VertSplit", { fg = colors.bg3 })
 hl(0, "StatusLine", { bg = colors.bg2, fg = colors.fg2 })
 hl(0, "StatusLineNC", { bg = colors.bg, fg = colors.bg3 })
 hl(0, "Pmenu", { bg = colors.bg2, fg = colors.fg2 })
-hl(0, "PmenuSel", { bg = colors.bg3, fg = colors.fg3 })
+hl(0, "PmenuSel", { bg = c_selection, fg = colors.fg })
 hl(0, "Search", { bg = colors.accent3, fg = colors.bg })
 hl(0, "IncSearch", { bg = colors.accent1, fg = colors.bg })
-hl(0, "Visual", { bg = colors.bg3 })
+hl(0, "Visual", { bg = c_selection })
 
 -- LSP Diagnostics
 hl(0, "DiagnosticError", { fg = colors.error })
@@ -136,9 +138,9 @@ hl(0, "DiagnosticHint", { fg = colors.hint })
 -- Cursor and references
 hl(0, "Cursor", { bg = colors.fg, fg = colors.bg })
 hl(0, "TermCursor", { bg = colors.fg, fg = colors.bg })
-hl(0, "LspReferenceText", { bg = colors.bg3 })
-hl(0, "LspReferenceRead", { bg = colors.bg3 })
-hl(0, "LspReferenceWrite", { bg = colors.bg3 })
+hl(0, "LspReferenceText", { bg = c_selection })
+hl(0, "LspReferenceRead", { bg = c_selection })
+hl(0, "LspReferenceWrite", { bg = c_selection })
 hl(0, "MatchParen", { bg = colors.accent3, fg = colors.bg, bold = true })
 
 -- Neo-tree / NvimTree
