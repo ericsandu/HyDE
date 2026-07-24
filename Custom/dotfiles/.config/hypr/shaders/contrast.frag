@@ -1,4 +1,3 @@
-// !damage_tracking = 0
 #version 300 es
 
 precision mediump float;
