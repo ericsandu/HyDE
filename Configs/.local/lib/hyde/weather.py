@@ -358,7 +358,7 @@ def main() -> None:
         "y",
         "yes",
     )  # True or False     (default: True)
-    show_location = os.getenv("WEATHER_SHOW_LOCATION", "False").lower() in (
+    show_location = os.getenv("WEATHER_SHOW_LOCATION", "True").lower() in (
         "true",
         "1",
         "t",
