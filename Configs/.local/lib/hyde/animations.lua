@@ -41,7 +41,7 @@ local M =
         --     {key = "theme", name = "Theme Preference", description = "Use the theme's animation setting", icon = ""}
         -- },
         static_items_position = "prepend",
-        on_set = write_animations_conf
+        -- on_set = write_animations_conf
     }
 )
 
