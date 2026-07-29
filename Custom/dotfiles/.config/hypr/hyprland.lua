@@ -16,6 +16,7 @@ hl.config({
     },
     ecosystem = {
         no_update_news = true,
+    }
 })
 
 local MOD = "SUPER"
