@@ -1,3 +1,5 @@
+require("window_rules")
+
 hl.config({
     input = {
         kb_layout = "ro",
