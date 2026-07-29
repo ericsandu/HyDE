@@ -120,6 +120,9 @@ if [[ "$clean_legacy" =~ ^[Yy]$ ]]; then
   # Remove deprecated legacy scripts (like shaders.sh) to prevent stow conflicts
   rm -f "${HOME}/.local/lib/hyde/shaders.sh"
   
+  # Remove legacy global icon/cursor themes that crash the V2 installer
+  sudo rm -rf /usr/local/share/icons/Bibata-Modern-Ice
+  
   echo ":: Legacy configurations removed."
 fi
 

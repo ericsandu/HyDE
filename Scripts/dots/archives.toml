@@ -10,7 +10,7 @@ target_root = "${XDG_DATA_HOME}/icons/Bibata-Modern-Ice"
 paths = ["index.theme", "cursor.theme", "cursors"]
 
 [[cursor-bibata-modern-ice.files]]
-action = "tarball"
+action = "sync"
 target_root = "/usr/local/share/icons/Bibata-Modern-Ice"
 paths = ["index.theme", "cursor.theme", "cursors"]
 
@@ -26,7 +26,7 @@ target_root = "${XDG_DATA_HOME}/icons/Bibata-Modern-Ice"
 paths = ["manifest.hl", "hyprcursors"]
 
 [[hyprcursor-bibata-modern-ice.files]]
-action = "tarball"
+action = "sync"
 target_root = "/usr/local/share/icons/Bibata-Modern-Ice"
 paths = ["manifest.hl", "hyprcursors"]
 
@@ -90,7 +90,7 @@ action = "sync"
 [[font-noto-sans-cjk-ttc.files]]
 target_root = "/usr/local/share/fonts/NotoSansCJK"
 paths = "."
-action = "tarball"
+action = "sync"
 #*
 #! MaterialDesingIcons are now built into the Nerd Fonts  no need to download them
 # TODO: Add systemwide installation
