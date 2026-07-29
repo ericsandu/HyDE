@@ -57,6 +57,28 @@ if [ -n "${NVIM_CUSTOM_REPO}" ]; then
 fi
 
 # Deploy custom dotfiles
+# Cleanup legacy HyDE configs to prevent conflicts with the new Lua engine
+read -p ":: Do you want to clean up legacy HyDE v1 configuration files? (Recommended if upgrading to the new Lua engine) [Y/n]: " clean_legacy
+clean_legacy=${clean_legacy:-Y}
+
+if [[ "$clean_legacy" =~ ^[Yy]$ ]]; then
+  echo ":: Cleaning up legacy .conf files and bash scripts..."
+  # Remove deprecated hyprland conf overrides (now handled in Lua)
+  rm -f "${HOME}/.config/hypr/userprefs.conf"
+  rm -f "${HOME}/.config/hypr/windowrules.conf"
+  rm -f "${HOME}/.config/hypr/keybindings.conf"
+  rm -f "${HOME}/.config/hypr/animations.conf"
+  rm -f "${HOME}/.config/hypr/monitors.conf"
+  
+  # Upstream replaced hyprland.conf with hyprland.lua
+  rm -f "${HOME}/.config/hypr/hyprland.conf"
+  
+  # Remove deprecated legacy scripts (like shaders.sh) to prevent stow conflicts
+  rm -f "${HOME}/.local/lib/hyde/shaders.sh"
+  
+  echo ":: Legacy configurations removed."
+fi
+
 if [ -d "${scrDir}/Custom/dotfiles/.config" ]; then
   mkdir -p "${HOME}/.config"
   cp -rf "${scrDir}/Custom/dotfiles/.config"/* "${HOME}/.config/"
