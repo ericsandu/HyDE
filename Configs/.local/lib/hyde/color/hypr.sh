@@ -65,6 +65,11 @@ handle_on_lua() {
     local _notification_font _bar_font _menu_font
     local _code_theme _sddm_theme _wallbash_mode
 
+    # Override GTK theme to Wallbash-Gtk when wallbash is enabled
+    if [[ ${enableWallDcol:-0} -gt 0 ]]; then
+        __GTK_THEME="Wallbash-Gtk"
+    fi
+
     lua_quote_to _hyde_theme "${HYDE_THEME}"
     lua_quote_to _gtk_theme "${__GTK_THEME}"
     lua_quote_to _icon_theme "${__ICON_THEME}"
