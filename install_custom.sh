@@ -29,7 +29,24 @@ if ! command -v luarocks >/dev/null 2>&1; then
   sudo pacman -S --needed --noconfirm lua luarocks
 fi
 
-"${scrDir}/Scripts/install.sh" "$@"
+MAX_RETRIES=3
+RETRY_COUNT=0
+while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
+  "${scrDir}/Scripts/install.sh" "$@"
+  EXIT_CODE=$?
+  if [ $EXIT_CODE -eq 0 ]; then
+    break
+  fi
+  RETRY_COUNT=$((RETRY_COUNT+1))
+  if [ $RETRY_COUNT -lt $MAX_RETRIES ]; then
+    echo ":: Installer failed with exit code $EXIT_CODE (likely a network drop). Retrying in 10 seconds... ($RETRY_COUNT/$MAX_RETRIES)"
+    sleep 10
+  else
+    echo ":: Installer failed after $MAX_RETRIES attempts. Aborting."
+    git -C "${scrDir}" restore Scripts/dots/*.toml 2>/dev/null || true
+    exit 1
+  fi
+done
 
 # Restore the TOML manifests to their original state to keep the git tree clean
 git -C "${scrDir}" restore Scripts/dots/*.toml 2>/dev/null || true
