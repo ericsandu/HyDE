@@ -15,6 +15,7 @@
       "theme-previous": "hyde-shell themeswitch -p",
       "theme-select": "hyde-shell themeselect",
       "theme-import": "hyde-shell app -T -- hydectl theme import",
+      "layouts-select": "hyde-shell layouts --select;pkill -RTMIN+19 waybar",
       "waybar-restart": "hyde-shell waybar -ubg",
       "waybar-reload-css": "sed -i '${/^$/d;}'  $XDG_CONFIG_HOME/waybar/style.css",
       "waybar-layout-select": "hyde-shell waybar --select-layout",

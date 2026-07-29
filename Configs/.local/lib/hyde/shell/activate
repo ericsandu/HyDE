@@ -1,0 +1,122 @@
+#!/usr/bin/env sh
+
+[ -n "${HYDE_ACTIVATED:-}" ] && return 0 2>/dev/null
+
+HYDE_ACTIVATED=1
+
+HYDE_MODE=""
+HYPRLAND_CONFIG=""
+
+setup_xdg() {
+    : "${XDG_CONFIG_HOME:=$HOME/.config}"
+    : "${XDG_CACHE_HOME:=$HOME/.cache}"
+    : "${XDG_DATA_HOME:=$HOME/.local/share}"
+    : "${XDG_STATE_HOME:=$HOME/.local/state}"
+
+    # fallback only
+    : "${XDG_RUNTIME_DIR:=/tmp}"
+
+    export XDG_CONFIG_HOME XDG_CACHE_HOME XDG_DATA_HOME XDG_STATE_HOME XDG_RUNTIME_DIR
+}
+
+hyde_die() {
+    printf '%s\n' "$*" >&2
+    return 1
+}
+
+hyde_has() {
+    command -v "$1" >/dev/null 2>&1
+}
+
+find_hyde_lua() {
+    for path in \
+        "$XDG_DATA_HOME/hypr/hyde.lua" \
+        /usr/local/share/hypr/hyde.lua \
+        /usr/share/hypr/hyde.lua; do
+        [ -f "$path" ] && {
+            printf '%s\n' "$path"
+            return 0
+        }
+    done
+
+    return 1
+}
+
+find_hyprland_bin() {
+    for bin in \
+        Hyprland \
+        hyprland; do
+        if hyde_has "$bin"; then
+            command -v "$bin"
+            return 0
+        fi
+    done
+
+    return 1
+}
+
+hyprland_has_lua() {
+    hyde_has readelf || return 0
+
+    _hyprbin=$(find_hyprland_bin) || return 1
+
+    case "$(readelf -d "$_hyprbin" 2>/dev/null)" in
+    *NEEDED*lua*)
+        return 0
+        ;;
+    esac
+
+    return 1
+}
+
+check_lua_runtime() {
+    hyde_has lua || return 1
+    hyde_has luarocks || return 1
+}
+
+setup_lua_mode() {
+    HYPRLAND_CONFIG=$(find_hyde_lua)
+
+    check_lua_runtime || {
+        printf 'Lua runtime incomplete\n' >&2
+        return 1
+    }
+
+    hyprland_has_lua || {
+        printf 'Hyprland lacks Lua support\n' >&2
+        return 1
+    }
+
+    HYDE_MODE="lua"
+    HYDE_FEATURE_LUA=1
+
+    export HYDE_FEATURE_LUA
+
+    return 0
+}
+
+setup_session() {
+    : "${XDG_CURRENT_DESKTOP:=HyDE}"
+    : "${XDG_SESSION_DESKTOP:=HyDE}"
+    : "${XDG_SESSION_TYPE:=wayland}"
+
+    export XDG_CURRENT_DESKTOP XDG_SESSION_DESKTOP XDG_SESSION_TYPE
+}
+
+hyde_activate() {
+    setup_xdg
+    setup_session
+
+    if setup_lua_mode; then
+        :
+    else
+        hyde_die 'No valid HyDE configuration found'
+        return 1
+    fi
+
+    export HYDE_ACTIVATED HYDE_MODE HYPRLAND_CONFIG
+
+    return 0
+}
+
+hyde_activate

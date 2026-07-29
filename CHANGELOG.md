@@ -6,6 +6,40 @@ All notable changes to 'HyDE' will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to _Modified_ [CalVer](https://calver.org/). See [Versioning](https://github.com/HyDE-Project/HyDE/blob/master/RELEASE_POLICY.md#versioning-yymq) For more info
  -->
 
+## v26.7.28 | End of April Release
+
+**Alright** Looks like hyprland 0.56.1 warns user to use lua so here you go!
+
+Run `install.sh -r` to update.
+
+Please report and try to fix any bugs. Thank you!
+Life is tight as of the moment. Any help will do. 💓
+
+
+### Added
+- GTK: hyde will have our own dconf db called 'hyde_hyprland'. That means dconf settings are isolated for HyDE Hyprland ONLY
+- Hyprland: Added 'hyde-shell layouts --select' to select hyprland layouts from default or custom layouts.
+  Add your custom layout modifications to '~/.config/hypr/lua/layouts/custom.lua'
+
+
+### Changed
+
+- Hyprland: Use lua for all its config
+- Hyprland: Deprecate old hyprlang configs
+- Core: Added lua and luarocks dependencies
+- Core: Convert some script to lua
+- Hyprland: Removed '[hyprland-start]'. Use 'desktop.start' instead.
+- Desktop: Added 'desktop.start' to handle startup commands.
+- Core: Some config changes in '~/.config/hyde/config.toml', Please see the schema for more info.
+- Hyprland: Drop of hyprlang support
+- GTK: Have a separate 'DCONF_PROFILE' for GTK apps! For QT, twas always handled by qt6ct and should not
+    mangle with QT. But KDE apps uses ~/.config/kdeglobals which might break KDE apps for multi DE. (No fix for now)
+
+
+## Fixed
+- Fix cantarell font
+- Some minor bugs
+
 ## v26.4.5 | End of April Release
 
 ### Changed
