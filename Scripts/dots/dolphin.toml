@@ -5,8 +5,6 @@
     version     = "0.1.0"
 
 [[dolphin.dependency]]
-    dnf  = [ "dolphin" ]
-    pacman = [ "dolphin" ]
 
 [[dolphin.files]]
     paths = [

@@ -2,11 +2,38 @@
 
 scrDir=$(dirname "$(realpath "$0")")
 
-# Stage package blacklist
-cp -f "${scrDir}/Custom/pkg_black.lst" "${scrDir}/Scripts/pkg_black.lst"
+# Dynamically strip blacklisted packages and inject custom packages into TOML manifests
+if [ -s "${scrDir}/Custom/pkg_black.lst" ]; then
+  echo ":: Patching upstream manifests to exclude blacklisted packages..."
+  grep -vE '^\s*#|^\s*$' "${scrDir}/Custom/pkg_black.lst" | awk '{print $1}' | while read -r pkg_name; do
+    sed -i -E "/[\"']${pkg_name}[\"']/d" "${scrDir}/Scripts/dots/"*.toml
+  done
+fi
 
-# Run main HyDE installer with custom packages
-"${scrDir}/Scripts/install.sh" "$@" "${scrDir}/Custom/pkg_custom.lst"
+if [ -s "${scrDir}/Custom/pkg_custom.lst" ]; then
+  echo ":: Patching upstream manifests to include custom packages..."
+  custom_pkgs=$(grep -vE '^\s*#|^\s*$' "${scrDir}/Custom/pkg_custom.lst" | awk '{print "\""$1"\","}' | tr '\n' ' ')
+  cat <<EOF >> "${scrDir}/Scripts/dots/deps.toml"
+
+[[global.dependency]]
+yay = [ ${custom_pkgs} ]
+paru = [ ${custom_pkgs} ]
+EOF
+fi
+
+# Run main HyDE installer
+# We pre-install lua and luarocks to bypass a bug in upstream's deez installer
+# where it silently swallows pacman errors, causing lua_env.py to crash later.
+if ! command -v luarocks >/dev/null 2>&1; then
+  echo ":: Pre-installing luarocks to prevent lua_env.py crash..."
+  sudo pacman -S --needed --noconfirm lua luarocks
+fi
+
+"${scrDir}/Scripts/install.sh" "$@"
+
+# Restore the TOML manifests to their original state to keep the git tree clean
+git -C "${scrDir}" restore Scripts/dots/*.toml 2>/dev/null || true
+
 
 # Set Thunar as default file manager
 if command -v xdg-mime >/dev/null 2>&1; then

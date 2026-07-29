@@ -3,7 +3,6 @@ action = "preserve"
 description = "Open source version of Visual Studio Code configuration"
 
 [[code-oss.dependency]]
-pacman = ["code"]
 
 [[code-oss.files]]
 source_root = "Configs/.config/Code - OSS/User"
@@ -19,8 +18,6 @@ paths = "code-flags.conf"
 [vscode]
 description = "Visual Studio Code configuration"
 action = "preserve"
-yay = ["visual-studio-code-bin"]
-paru = ["visual-studio-code-bin"]
 
 [[vscode.files]]
 source_root = "Configs/.config/Code/User"
