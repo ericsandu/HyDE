@@ -1,4 +1,5 @@
 print("HYPRLAND.LUA EXECUTED")
+require("key_binds")
 require("window_rules")
 
 local move_window = function(dir, pix)
