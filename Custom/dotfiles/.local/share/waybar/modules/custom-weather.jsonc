@@ -1,8 +1,8 @@
 {
   "custom/weather": {
-    "exec": "wttrbar",
+    "exec": "env WEATHER_SHOW_LOCATION=false hyde-shell weather",
     "tooltip": true,
-    "format": "{}°",
+    "format": "{}",
     "interval": 3600,
     "return-type": "json"
   }
