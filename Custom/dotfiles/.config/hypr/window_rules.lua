@@ -95,3 +95,14 @@ for _, layer in ipairs(blur_layers) do
   hl.layer_rule({ blur = true, match = { namespace = layer } })
   hl.layer_rule({ ignore_alpha = true, match = { namespace = layer } })
 end
+
+-- Rofi Opacity
+hl.window_rule({
+  opacity = { 0.9, 0.9 },
+  match = { class = "^([Rr]ofi)$" }
+})
+hl.config({
+  layerrule = {
+    "opacity 0.9, rofi"
+  }
+})
