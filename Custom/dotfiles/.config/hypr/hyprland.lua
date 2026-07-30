@@ -17,6 +17,22 @@ local move_window = function(dir, pix)
 	end
 end
 
+local toggle_fullscreen = function(state_type)
+	return function()
+		local active_window = hl.get_active_window()
+		if not active_window then
+			return
+		end
+		local current_state = tonumber(active_window.fullscreen) or 0
+		local next_state = current_state == state_type and 0 or state_type
+		hl.dispatch(hl.dsp.window.fullscreen_state({
+			internal = next_state,
+			client = next_state,
+			window = active_window,
+		}))
+	end
+end
+
 hl.monitor({ output = "eDP-1", mode = "preferred", position = "auto", scale = 1.25 })
 hl.monitor({ output = "", mode = "highres", position = "auto-up", scale = 1 })
 
@@ -49,8 +65,8 @@ hl.bind(MOD .. " + " .. "ALT" .. " + W", hl.dsp.exec_cmd(hyde.sh.menu.wallpapers
 hl.bind(MOD .. " + " .. "SHIFT" .. " + A", hl.dsp.exec_cmd("hyde-shell rofiselect"))
 hl.bind("ALT" .. " + F4", hl.dsp.window.close())
 hl.bind(MOD .. " + T", hl.dsp.window.float({ action = "toggle" }))
-hl.bind(MOD .. " + F", hl.dsp.window.fullscreen(1))
-hl.bind(MOD .. " + " .. "SHIFT" .. " + F", hl.dsp.window.fullscreen(2))
+hl.bind(MOD .. " + F", toggle_fullscreen(1))
+hl.bind(MOD .. " + " .. "SHIFT" .. " + F", toggle_fullscreen(2))
 hl.bind(MOD .. " + " .. "SHIFT" .. " + Q", hl.dsp.exec_cmd("hyde-shell logoutlaunch"))
 hl.bind("CTRL" .. " + " .. "ALT" .. " + W", hl.dsp.exec_cmd("hyde-shell waybar --hide"))
 hl.bind(MOD .. " + H", hl.dsp.focus({ direction = "l" }))
