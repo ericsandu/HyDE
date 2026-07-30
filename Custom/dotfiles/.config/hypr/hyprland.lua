@@ -34,7 +34,7 @@ local toggle_fullscreen = function(state_type)
 end
 
 hl.monitor({ output = "eDP-1", mode = "preferred", position = "auto", scale = 1.25 })
-hl.monitor({ output = "", mode = "highres", position = "auto", scale = 1 })
+hl.monitor({ output = "", mode = "highres", position = "auto-up", scale = 1 })
 
 hl.config({
 	input = {
