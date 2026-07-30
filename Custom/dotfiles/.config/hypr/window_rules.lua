@@ -65,12 +65,12 @@ local floats = {
 }
 hl.window_rule({
   float = true,
-  match = { class = floats }
+  match = { class = table.concat(floats, "|") }
 })
 
 hl.window_rule({
   float = true,
-  match = { title = {"^(Friends List)$", "^(Steam Settings)$"} }
+  match = { title = table.concat({"^(Friends List)$", "^(Steam Settings)$"}, "|") }
 })
 
 -- Blender
