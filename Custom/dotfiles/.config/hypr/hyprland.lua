@@ -1,5 +1,5 @@
-print("HYPRLAND.LUA EXECUTED")
-hyde = hyde or {}
+local hl = hl or {}
+local hyde = hyde or {}
 hyde.binds = hyde.binds or {}
 hyde.binds.dedup_fields = {} -- Tell the deduplicator to ignore flags (like 'locked') when matching overrides
 
