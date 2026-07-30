@@ -29,6 +29,29 @@ if ! command -v luarocks >/dev/null 2>&1; then
   sudo pacman -S --needed --noconfirm lua luarocks
 fi
 
+KEEP_CONFIG=0
+for arg in "$@"; do
+  if [ "$arg" = "-i" ] || [ "$arg" = "--install" ]; then
+    KEEP_CONFIG=1
+  fi
+done
+
+if [ $KEEP_CONFIG -eq 0 ]; then
+  echo ":: Cleaning up existing configurations before install to prevent stow conflicts..."
+  if [ -d "${scrDir}/Custom/dotfiles/.config" ]; then
+    find "${scrDir}/Custom/dotfiles/.config" -mindepth 1 -maxdepth 1 -printf "%f\n" 2>/dev/null | while read -r f; do
+      rm -rf "${HOME}/.config/$f"
+    done
+  fi
+  if [ -d "${scrDir}/Custom/dotfiles/.local" ]; then
+    find "${scrDir}/Custom/dotfiles/.local" -mindepth 1 -maxdepth 1 -printf "%f\n" 2>/dev/null | while read -r f; do
+      rm -rf "${HOME}/.local/$f"
+    done
+  fi
+else
+  echo ":: Keep configs flag passed. Skipping pre-install cleanup of existing dotfiles."
+fi
+
 MAX_RETRIES=3
 RETRY_COUNT=0
 while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
@@ -126,14 +149,20 @@ if [[ "$clean_legacy" =~ ^[Yy]$ ]]; then
   echo ":: Legacy configurations removed."
 fi
 
-if [ -d "${scrDir}/Custom/dotfiles/.config" ]; then
-  mkdir -p "${HOME}/.config"
-  cp -rf "${scrDir}/Custom/dotfiles/.config"/* "${HOME}/.config/"
+if [ $KEEP_CONFIG -eq 0 ]; then
+  echo ":: Deploying custom dotfiles..."
+  if [ -d "${scrDir}/Custom/dotfiles/.config" ]; then
+    mkdir -p "${HOME}/.config"
+    cp -rf "${scrDir}/Custom/dotfiles/.config"/* "${HOME}/.config/"
+  fi
+  if [ -d "${scrDir}/Custom/dotfiles/.local" ]; then
+    mkdir -p "${HOME}/.local"
+    cp -rf "${scrDir}/Custom/dotfiles/.local"/* "${HOME}/.local/"
+  fi
+else
+  echo ":: Keep configs flag passed. Skipping custom dotfile deployment to preserve personal configurations."
 fi
-if [ -d "${scrDir}/Custom/dotfiles/.local" ]; then
-  mkdir -p "${HOME}/.local"
-  cp -rf "${scrDir}/Custom/dotfiles/.local"/* "${HOME}/.local/"
-fi
+
 
 # Compile Waybar custom configuration
 # We check for DBus/XDG_RUNTIME_DIR to prevent the script from hanging or crashing
