@@ -9,11 +9,6 @@ action = "sync"
 target_root = "${XDG_DATA_HOME}/icons/Bibata-Modern-Ice"
 paths = ["index.theme", "cursor.theme", "cursors"]
 
-[[cursor-bibata-modern-ice.files]]
-action = "sync"
-target_root = "/usr/local/share/icons/Bibata-Modern-Ice"
-paths = ["index.theme", "cursor.theme", "cursors"]
-
 [hyprcursor-bibata-modern-ice]
 version = "1.0.0"
 source = "https://github.com/LOSEARDES77/Bibata-Cursor-hyprcursor/releases/download/1.0/hypr_Bibata-Modern-Ice.tar.gz"
@@ -23,11 +18,6 @@ description = "A hyprcursor build of Bibata-Modern-Ice"
 [[hyprcursor-bibata-modern-ice.files]]
 action = "sync"
 target_root = "${XDG_DATA_HOME}/icons/Bibata-Modern-Ice"
-paths = ["manifest.hl", "hyprcursors"]
-
-[[hyprcursor-bibata-modern-ice.files]]
-action = "sync"
-target_root = "/usr/local/share/icons/Bibata-Modern-Ice"
 paths = ["manifest.hl", "hyprcursors"]
 
 [font-cantarell]
