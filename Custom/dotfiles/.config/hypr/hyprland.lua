@@ -44,6 +44,10 @@ hl.config({
     ecosystem = {
         no_update_news = true,
     },
+    gestures = {
+        workspace_swipe = true,
+        workspace_swipe_fingers = 3,
+    },
 })
 
 hl.animation({ leaf = "borderangle", enabled = true, speed = 30, bezier = "linear", style = "loop" })
