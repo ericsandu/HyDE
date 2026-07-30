@@ -48,7 +48,7 @@ local opacities = {
 
 for _, rule in ipairs(opacities) do
   hl.window_rule({
-    opacity = {rule[1], rule[2], "1.0"},
+    opacity = string.format("%s %s %s", rule[1], rule[2], "1.0"),
     match = {
       class = rule[3]
     }
@@ -93,5 +93,5 @@ local blur_layers = {
 }
 for _, layer in ipairs(blur_layers) do
   hl.layer_rule({ blur = true, match = { namespace = layer } })
-  hl.layer_rule({ ignore_alpha = 0, match = { namespace = layer } })
+  hl.layer_rule({ ignore_alpha = true, match = { namespace = layer } })
 end
