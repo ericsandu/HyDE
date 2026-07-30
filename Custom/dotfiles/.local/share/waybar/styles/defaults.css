@@ -71,12 +71,14 @@ window#waybar {
     padding: 0em;
     margin-left: 0em;
     margin-right: 0em;
-    color: @wb-act-fg;
+    color: @main-fg;
+    opacity: 0.4;
     animation: ws_normal 20s ease-in-out 1;
 }
 
 #workspaces button.active {
-    color: @wb-act-bg;
+    color: @main-fg;
+    opacity: 1.0;
     padding-left: 0em;
     padding-right: 0em;
     animation: ws_active 20s ease-in-out 1;
@@ -84,7 +86,8 @@ window#waybar {
 }
 
 #workspaces button:hover {
-    color: @wb-act-bg;
+    color: @main-fg;
+    opacity: 0.8;
     animation: ws_hover 20s ease-in-out 1;
     transition: all 0.3s cubic-bezier(.55, -0.68, .48, 1.682);
 }
