@@ -59,11 +59,8 @@ pacman = [
   "qt5-wayland", # wayland support in qt5
   "qt6-wayland", # wayland support in qt6
   # Applications
-  "firefox", # browser
-  "ark", # kde file archiver
   "unzip", # extracting zip files
   "vim", # terminal text editor
-  # * "code", # ide text editor
   "nwg-displays", # monitor management utility
   "fzf", # Command-line fuzzy finder
   # HyDE
@@ -77,3 +74,7 @@ paru = [
   "hyprquery", # A CLI utility for querying configuration values from hypr-related configuration. Using native hyprlang lib.
 
 ]
+
+[[global.dependency]]
+yay = [ "thunar", "gvfs", "tumbler", "neovim", "ttf-nerd-fonts-symbols", "ttf-jetbrains-mono-nerd", "file-roller", "zathura", "zathura-pdf-poppler", "zen-browser-bin", "bat", "fd", "mpv", "yt-dlp", "imv", "btop",  ]
+paru = [ "thunar", "gvfs", "tumbler", "neovim", "ttf-nerd-fonts-symbols", "ttf-jetbrains-mono-nerd", "file-roller", "zathura", "zathura-pdf-poppler", "zen-browser-bin", "bat", "fd", "mpv", "yt-dlp", "imv", "btop",  ]

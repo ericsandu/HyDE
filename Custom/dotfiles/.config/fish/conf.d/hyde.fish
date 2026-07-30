@@ -117,7 +117,7 @@ end
 # NOTE: binds Alt+n to inserting the nth command from history in edit buffer
 # e.g. Alt+4 is same as pressing Up arrow key 4 times
 # really helpful if you get used to it
-bind_M_n_history
+# bind_M_n_history
 
 
 
