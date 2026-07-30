@@ -163,7 +163,7 @@ if [ $KEEP_CONFIG -eq 0 ]; then
   # Create blank stubs for files sourced by configs (prevents globbing errors if upstream hasn't deployed them)
   touch "${HOME}/.config/hypr/workflows.conf"
   mkdir -p "${HOME}/.local/share/hypr"
-  touch "${HOME}/.local/share/hypr/hyprlock.conf"
+  [ -f "${HOME}/.local/share/hypr/hyprlock.conf" ] || touch "${HOME}/.local/share/hypr/hyprlock.conf"
 
   # Seed HyDE state with our preferred defaults
   mkdir -p "${HOME}/.local/state/hyde"
