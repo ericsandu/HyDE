@@ -121,6 +121,10 @@ if [ -n "${NVIM_CUSTOM_REPO}" ]; then
 fi
 
 # Deploy custom dotfiles
+# Flush stale wallbash caches to force regeneration with current templates
+echo ":: Flushing wallbash theme caches..."
+rm -rf "${HOME}/.cache/hyde/wallbash"
+
 # Cleanup legacy HyDE configs to prevent conflicts with the new Lua engine
 read -p ":: Do you want to clean up legacy HyDE v1 configuration files? (Recommended if upgrading to the new Lua engine) [Y/n]: " clean_legacy
 clean_legacy=${clean_legacy:-Y}
@@ -156,6 +160,8 @@ if [ $KEEP_CONFIG -eq 0 ]; then
     mkdir -p "${HOME}/.local"
     cp -rf "${scrDir}/Custom/dotfiles/.local"/* "${HOME}/.local/"
   fi
+  # Create blank workflows.conf stub if missing (upstream hyprland.conf sources it)
+  touch "${HOME}/.config/hypr/workflows.conf"
 else
   echo ":: Keep configs flag passed. Skipping custom dotfile deployment to preserve personal configurations."
 fi
