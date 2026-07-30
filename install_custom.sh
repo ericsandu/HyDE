@@ -43,11 +43,8 @@ if [ $KEEP_CONFIG -eq 0 ]; then
       rm -rf "${HOME}/.config/$f"
     done
   fi
-  if [ -d "${scrDir}/Custom/dotfiles/.local" ]; then
-    find "${scrDir}/Custom/dotfiles/.local" -mindepth 1 -maxdepth 1 -printf "%f\n" 2>/dev/null | while read -r f; do
-      rm -rf "${HOME}/.local/$f"
-    done
-  fi
+  # We intentionally DO NOT clean up ~/.local here to avoid catastrophically deleting ~/.local/share, ~/.local/lib, etc.
+  # The final cp -rf will safely overwrite the necessary files in ~/.local without breaking the system.
 else
   echo ":: Keep configs flag passed. Skipping pre-install cleanup of existing dotfiles."
 fi
