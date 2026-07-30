@@ -1,6 +1,6 @@
 {
   "custom/weather": {
-    "exec": "env WEATHER_SHOW_LOCATION=false hyde-shell weather",
+    "exec": "env WEATHER_SHOW_LOCATION=false WEATHER_TEMPERATURE_UNIT=c hyde-shell weather",
     "tooltip": true,
     "format": "{}",
     "interval": 3600,
