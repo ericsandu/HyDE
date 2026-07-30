@@ -55,11 +55,14 @@ hl.config({
 	},
 })
 
+require("animations.optimized")
 hl.animation({ leaf = "borderangle", enabled = true, speed = 30, bezier = "linear", style = "loop" })
 local MOD = "SUPER"
 hl.gesture({ fingers = 3, direction = "horizontal", action = "workspace" })
 hl.bind(MOD .. " + W", hl.dsp.window.close())
 hl.bind(MOD .. " + " .. "SHIFT" .. " + W", hl.dsp.exec_cmd("hyprctl kill"))
+hl.bind(MOD .. " + " .. "ALT" .. " + W", hl.dsp.exec_cmd(hyde.sh.menu.wallpapers()))
+hl.bind(MOD .. " + " .. "SHIFT" .. " + A", hl.dsp.exec_cmd(hyde.sh.menu.launcher()))
 hl.bind("ALT" .. " + F4", hl.dsp.window.close())
 hl.bind(MOD .. " + T", hl.dsp.window.float({ action = "toggle" }))
 hl.bind(MOD .. " + F", toggle_fullscreen(1))
@@ -121,4 +124,4 @@ hl.bind(MOD .. " + mouse_down", hl.dsp.focus({ workspace = "e+1" }))
 hl.bind(MOD .. " + mouse_up", hl.dsp.focus({ workspace = "e-1" }))
 hl.bind(MOD .. " + " .. "SHIFT" .. " + S", hl.dsp.window.move({ workspace = "special" }))
 hl.bind(MOD .. " + " .. "ALT" .. " + S", hl.dsp.window.move({ workspace = "special", silent = true }))
-hl.bind(MOD .. " + S", hl.dsp.focus({ workspace = "special", action = "toggle" }))
+hl.bind(MOD .. " + S", hl.dsp.exec_cmd("hyprctl dispatch togglespecialworkspace"))
