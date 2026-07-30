@@ -27,6 +27,8 @@ local toggle_fullscreen = function(state_type)
     end
 end
 
+hl.monitor({ output = "", mode = "preferred", position = "auto", scale = 1.25 })
+
 hl.config({
     input = {
         kb_layout = "ro",
