@@ -44,14 +44,11 @@ hl.config({
     ecosystem = {
         no_update_news = true,
     },
-    gestures = {
-        workspace_swipe = true,
-        workspace_swipe_fingers = 3,
-    },
 })
 
 hl.animation({ leaf = "borderangle", enabled = true, speed = 30, bezier = "linear", style = "loop" })
 local MOD = "SUPER"
+hl.gesture({ fingers = 3, direction = "horizontal", action = "workspace" })
 hl.bind(MOD .. " + W", hl.dsp.window.close())
 hl.bind(MOD .. " + " .. "SHIFT" .. " + W", hl.dsp.exec_cmd("hyprctl kill"))
 hl.bind("ALT" .. " + F4", hl.dsp.window.close())
