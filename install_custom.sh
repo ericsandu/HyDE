@@ -160,8 +160,10 @@ if [ $KEEP_CONFIG -eq 0 ]; then
     mkdir -p "${HOME}/.local"
     cp -rf "${scrDir}/Custom/dotfiles/.local"/* "${HOME}/.local/"
   fi
-  # Create blank workflows.conf stub if missing (upstream hyprland.conf sources it)
+  # Create blank stubs for files sourced by configs (prevents globbing errors if upstream hasn't deployed them)
   touch "${HOME}/.config/hypr/workflows.conf"
+  mkdir -p "${HOME}/.local/share/hypr"
+  touch "${HOME}/.local/share/hypr/hyprlock.conf"
 else
   echo ":: Keep configs flag passed. Skipping custom dotfile deployment to preserve personal configurations."
 fi
