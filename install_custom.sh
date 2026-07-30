@@ -164,6 +164,18 @@ if [ $KEEP_CONFIG -eq 0 ]; then
   touch "${HOME}/.config/hypr/workflows.conf"
   mkdir -p "${HOME}/.local/share/hypr"
   touch "${HOME}/.local/share/hypr/hyprlock.conf"
+
+  # Seed HyDE state with our preferred defaults
+  mkdir -p "${HOME}/.local/state/hyde"
+  STATE_FILE="${HOME}/.local/state/hyde/staterc"
+  # Only seed values that aren't already set (don't overwrite on re-installs)
+  grep -q "WAYBAR_LAYOUT_NAME" "$STATE_FILE" 2>/dev/null || {
+    echo 'WAYBAR_LAYOUT_PATH='"${HOME}"'/.local/share/waybar/layouts/mine.jsonc' >> "$STATE_FILE"
+    echo 'WAYBAR_LAYOUT_NAME=mine' >> "$STATE_FILE"
+  }
+  grep -q "WAYBAR_STYLE_PATH" "$STATE_FILE" 2>/dev/null || {
+    echo 'WAYBAR_STYLE_PATH='"${HOME}"'/.local/share/waybar/styles/defaults.css' >> "$STATE_FILE"
+  }
 else
   echo ":: Keep configs flag passed. Skipping custom dotfile deployment to preserve personal configurations."
 fi
