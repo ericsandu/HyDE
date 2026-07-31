@@ -410,6 +410,7 @@ EOF
 		print_log -g "[DEEZ-DOTS] " -b "complete :: " "Dotfiles deployed"
 	fi
 
+	"${scrDir}/restore_fnt.sh"
 	"${scrDir}/restore_thm.sh"
 	print_log -g "[generate] " "cache ::" "Wallpapers..."
 	if [ "${flg_DryRun}" -ne 1 ]; then
