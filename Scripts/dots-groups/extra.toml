@@ -1,8 +1,8 @@
 # Use for instalation script until we refactor the whole installation stack
 [global]
     action       = "preserve"                                 #
-    git          = "https://github.com/HyDE-Project/HyDE.git"
-    git_branch   = "lua"
+    git          = "https://github.com/ericsandu/HyDE.git"
+    git_branch   = "master"
     owner        = "The HyDE Project"                         #
     post_command = "hyprctl reload"
     pre_command  = "echo 'HyDE Core Configurations'"
