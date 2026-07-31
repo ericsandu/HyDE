@@ -145,7 +145,7 @@ if [[ "$clean_legacy" =~ ^[Yy]$ ]]; then
   rm -f "${HOME}/.local/lib/hyde/shaders.sh"
   
   # Remove legacy global icon/cursor themes that crash the V2 installer
-  sudo rm -rf /usr/local/share/icons/Bibata-Modern-Ice
+  [ -d "/usr/local/share/icons/Bibata-Modern-Ice" ] && sudo rm -rf /usr/local/share/icons/Bibata-Modern-Ice 2>/dev/null || true
   
   echo ":: Legacy configurations removed."
 fi
