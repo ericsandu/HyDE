@@ -155,6 +155,12 @@ show_theme_status
 if ! dconf write /org/gnome/desktop/interface/icon-theme "'$ICON_THEME'"; then
     print_log -sec "theme" -warn "dconf" "failed to set icon theme"
 fi
+if ! dconf write /org/gnome/desktop/interface/gtk-theme "'$GTK_THEME'"; then
+    print_log -sec "theme" -warn "dconf" "failed to set gtk theme"
+fi
+if ! dconf write /org/gnome/desktop/interface/color-scheme "'$COLOR_SCHEME'"; then
+    print_log -sec "theme" -warn "dconf" "failed to set color scheme"
+fi
 if [ -d /run/current-system/sw/share/themes ]; then
     export themesDir=/run/current-system/sw/share/themes
 fi

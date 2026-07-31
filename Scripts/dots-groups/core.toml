@@ -16,6 +16,7 @@
         "../dots/wallbash.toml",
         "../dots/waybar.toml",
         "../dots/rofi.toml",
+        "../dots/wlogout.toml",
     ]
 
 # Loads an array of package manager commands

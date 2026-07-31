@@ -192,7 +192,4 @@ if [ -n "$XDG_RUNTIME_DIR" ] || [ -n "$DBUS_SESSION_BUS_ADDRESS" ]; then
 else
   echo ":: DBUS not active. Skipping Waybar live update (will run on next boot)."
 fi
-echo ":: Regenerating wallbash templates..."
-if [ -f "${HOME}/.local/bin/hyde-shell" ]; then
-    "${HOME}/.local/bin/hyde-shell" reload >/dev/null 2>&1 || true
-fi
+
