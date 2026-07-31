@@ -38,3 +38,9 @@ action = "preserve"
 source_root = "Configs/.config/hypr/themes"
 target_root = "${XDG_CONFIG_HOME}/hypr/themes"
 paths = ["."]
+
+[[hyprland.files]]
+action = "preserve"
+source_root = "Configs/.config/hypr/animations"
+target_root = "${XDG_CONFIG_HOME}/hypr/animations"
+paths = ["."]

@@ -194,5 +194,5 @@ else
 fi
 echo ":: Regenerating wallbash templates..."
 if [ -f "${HOME}/.local/bin/hyde-shell" ]; then
-    "${HOME}/.local/bin/hyde-shell" reload || true
+    "${HOME}/.local/bin/hyde-shell" reload >/dev/null 2>&1 || true
 fi
