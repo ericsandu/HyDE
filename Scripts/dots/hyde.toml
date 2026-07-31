@@ -11,7 +11,6 @@ target_root = "${XDG_CONFIG_HOME}"
 paths = ["hyde/wallbash"]
 
 [[hyde.files]]
-clean_target = true
 action = "sync"
 source_root = "Configs/.local/lib"
 target_root = "${HOME}/.local/lib"
@@ -24,7 +23,6 @@ ignored_paths = [".*", "__pycache__"]
 # target_root = "${XDG_DATA_HOME}"
 # paths = ["icons/Wallbash-Icon", "themes/Wallbash-Gtk"]
 [[hyde.files]]
-clean_target = true
 action = "sync"
 source_root = "Configs/.local/share"
 target_root = "${XDG_DATA_HOME}"
