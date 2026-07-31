@@ -101,8 +101,8 @@ fi
 # Install custom Neovim configuration
 NVIM_CUSTOM_REPO=${NVIM_CUSTOM_REPO:-"https://github.com/ericsandu/lazyvim"}
 if [ -n "${NVIM_CUSTOM_REPO}" ]; then
-  if [ -d "${HOME}/.config/nvim" ] && [ "$(ls -A "${HOME}/.config/nvim" 2>/dev/null)" ]; then
-    read -p ":: Directory ~/.config/nvim is not empty. Remove contents and install custom Neovim configuration? [y/N]: " nvim_confirm
+  if [ -e "${HOME}/.config/nvim" ]; then
+    read -p ":: Path ~/.config/nvim already exists. Remove contents and install custom Neovim configuration? [y/N]: " nvim_confirm
     nvim_confirm=${nvim_confirm:-N}
   else
     nvim_confirm="Y"
