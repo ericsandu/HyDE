@@ -5,7 +5,7 @@
     pacman = [ "wlogout" ]
 
 [[wlogout.files]]
-    action      = "preserve"
-    paths       = ["."]
-    source_root = "Configs/.config/wlogout"
-    target_root = "${XDG_CONFIG_HOME}/wlogout"
+    action      = "sync"
+    paths       = ["wlogout"]
+    source_root = "Configs/.config"
+    target_root = "${XDG_CONFIG_HOME}"
