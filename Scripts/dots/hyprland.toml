@@ -26,3 +26,15 @@ action = "preserve"
 source_root = "Configs/.config/hypr"
 target_root = "${XDG_CONFIG_HOME}/hypr/"
 paths = ["hyprland.lua"]
+
+[[hyprland.files]]
+action = "preserve"
+source_root = "Configs/.config/hypr/shaders"
+target_root = "${XDG_CONFIG_HOME}/hypr/shaders"
+paths = ["."]
+
+[[hyprland.files]]
+action = "preserve"
+source_root = "Configs/.config/hypr/themes"
+target_root = "${XDG_CONFIG_HOME}/hypr/themes"
+paths = ["."]
