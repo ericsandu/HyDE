@@ -2,15 +2,15 @@
     "hyprland/workspaces": {
         "all-outputs": true,
         "active-only": false,
-        "on-click": "activate",
+        "on-click": "hyprctl dispatch 'hl.dsp.focus({workspace=\"{name}\"})'",
         "disable-scroll": false,
-        "on-scroll-up": "hyprctl dispatch workspace -1",
-        "on-scroll-down": "hyprctl dispatch workspace +1",
+        "on-scroll-up": "hyprctl dispatch 'hl.dsp.focus({workspace=\"m-1\"})'",
+        "on-scroll-down": "hyprctl dispatch 'hl.dsp.focus({workspace=\"m+1\"})'",
         "persistent-workspaces": {},
         "format": "{icon}",
         "format-icons": {
             "default": "",
-            "active": "",
+            "active": "",
             "urgent": ""
         }
     }

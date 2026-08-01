@@ -178,17 +178,19 @@ hl.bind(MOD .. " + SHIFT + slash", hl.dsp.exec_cmd(hyde.sh.menu.search()), _F)
 -- $hc=Hardware Controls
 -- $d=[$hc|Audio]
 
--- # binddl  = , F10, $d toggle mute output , exec, hyde-shell volumecontrol.sh -o m # toggle audio mute
--- # binddel = , F11, $d decrease volume , exec, hyde-shell volumecontrol.sh -o d # decrease volume
--- # binddel = , F12, $d increase volume , exec, hyde-shell volumecontrol.sh -o i # increase volume
-
 _F = {description = "[Hardware Controls|Audio] un/mmute output", locked = true}
+hl.bind("F10", hl.dsp.exec_cmd(hyde.sh.volumecontrol("-o", "m")), _F)
 hl.bind("XF86AudioMute", hl.dsp.exec_cmd(hyde.sh.volumecontrol("-o", "m")), _F)
+
 _F = {description = "[Hardware Controls|Audio] un/mute microphone", locked = true}
 hl.bind("XF86AudioMicMute", hl.dsp.exec_cmd(hyde.sh.volumecontrol("-i", "m")), _F)
+
 _F = {description = "[Hardware Controls|Audio] decrease volume", locked = true, repeating = true}
+hl.bind("F11", hl.dsp.exec_cmd(hyde.sh.volumecontrol("-o", "d")), _F)
 hl.bind("XF86AudioLowerVolume", hl.dsp.exec_cmd(hyde.sh.volumecontrol("-o", "d")), _F)
+
 _F = {description = "[Hardware Controls|Audio] increase volume", locked = true, repeating = true}
+hl.bind("F12", hl.dsp.exec_cmd(hyde.sh.volumecontrol("-o", "i")), _F)
 hl.bind("XF86AudioRaiseVolume", hl.dsp.exec_cmd(hyde.sh.volumecontrol("-o", "i")), _F)
 
 _F = {description = "[Hardware Controls|Media] play media", locked = true}
