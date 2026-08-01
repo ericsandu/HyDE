@@ -198,7 +198,7 @@ function M.new(opts)
                 end
             end
         end
-        return find("default") or ordered[1]
+        return find(opts.default_item or "default") or ordered[1]
     end
 
     local function reload()
@@ -212,7 +212,7 @@ function M.new(opts)
     local function waybar()
         local cur = state.read(sf)
         if not cur then
-            local fallback = find("default") or ordered[1]
+            local fallback = find(opts.default_item or "default") or ordered[1]
             if fallback then
                 state.write(sd, sf, fallback)
                 cur = state.read(sf) or fallback

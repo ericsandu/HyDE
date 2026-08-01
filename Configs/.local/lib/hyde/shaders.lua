@@ -203,7 +203,8 @@ local M =
         on_set = apply_shader,
         rofi_opts = {
             prioritize = {"00-disable", "disable"}
-        }
+        },
+        default_item = "disable"
     }
 )
 
