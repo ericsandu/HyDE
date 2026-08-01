@@ -33,7 +33,7 @@ ignored_paths = [".*", "__pycache__", "schema"]
 action = "sync"
 source_root = "Configs/.config"
 target_root = "${XDG_CONFIG_HOME}"
-paths = ["gtk-3.0", "Kvantum", "nwg-look", "qt5ct", "qt6ct", "xsettingsd"]
+paths = ["gtk-3.0", "Kvantum", "nwg-look", "qt5ct", "qt6ct", "xsettingsd", "dconf"]
 ignored_paths = [
     "qt5ct/qt5ct.conf",
     "qt6ct/qt6ct.conf",
