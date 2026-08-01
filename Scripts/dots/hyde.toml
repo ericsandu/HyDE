@@ -56,6 +56,12 @@ target_root = "${XDG_CONFIG_HOME}/hyde"
 paths = "config.toml"
 
 [[hyde.files]]
+action = "sync"
+source_root = "Configs/.config/hyde"
+target_root = "${XDG_CONFIG_HOME}/hyde"
+paths = "themes"
+
+[[hyde.files]]
 action = "preserve"
 source_root = "Configs/.config/pypr"
 target_root = "${XDG_CONFIG_HOME}/pypr"
