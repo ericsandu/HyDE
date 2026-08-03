@@ -405,7 +405,7 @@ EOF
 		"${deez_exe}" --source "${cloneDir}" --config "${scrDir}/dots-groups/core.toml" dots --skip-git --deploy all || exit 1
 
 		print_log -g "[DEEZ-DOTS] " -b "deploy :: " "Installing extra dotfiles..."
-		"${deez_exe}" --source "${cloneDir}" --config "${scrDir}/dots-groups/extra.toml" dots --skip-git --deploy || exit 1
+		"${deez_exe}" --source "${cloneDir}" --config "${scrDir}/dots-groups/extra.toml" dots --skip-git --deploy all || exit 1
 
 		print_log -g "[DEEZ-DOTS] " -b "complete :: " "Dotfiles deployed"
 	fi
