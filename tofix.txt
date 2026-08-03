@@ -1,9 +1,0 @@
-Waybar launcher module on click doesn't work, use the same command as used in the Super+Space shortcut
-The hyde-menu module for waybars popup seems to still be the old one, upstream seems to have reworked it to newer version that bundles shaders with hyprsunshine, use that one, removing our overwrite for the original one if there is one
-Waybar workspace module on click still doesn't work
-Waybar workspace modules shows workspaces for all monitors bundled up instead of only the ones for the current display
-Fastfetch should only use the wallpaper as it's icon, removing unnecesarry bundled icons
-Notification know whell SVG for volume / brightness is way smaller than the notification popup
-Waybar window module character limit is way too low, change it to 75
-Remove the retry mechanism from the installer and make it so that the neovim configuration is only installed at the users discresion
-
