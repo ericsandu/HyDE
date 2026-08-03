@@ -2,8 +2,6 @@
     description = "electron flags for wayland"
 
 
-[[electron-flags.dependency]]
-    pacman = [ "electron" ]
 
 [[electron-flags.files]]
     action      = "preserve"
