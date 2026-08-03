@@ -4,7 +4,7 @@
         "class": "no-margin-padding",
         "all-outputs": true,
         "active-only": false,
-        "on-click": "hyprctl dispatch 'hl.dsp.focus({workspace=\"{name}\"})'",
+        "on-click": "hyprctl dispatch 'hl.dsp.focus({workspace=\"{id}\"})'",
         "disable-scroll": false,
         "on-scroll-up": "hyprctl dispatch 'hl.dsp.focus({workspace=\"m-1\"})'",
         "on-scroll-down": "hyprctl dispatch 'hl.dsp.focus({workspace=\"m+1\"})'",
