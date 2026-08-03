@@ -10,7 +10,7 @@
         "format": "{icon}",
         "format-icons": {
             "default": "",
-            "active": "",
+            "active": "",
             "urgent": ""
         }
     }
