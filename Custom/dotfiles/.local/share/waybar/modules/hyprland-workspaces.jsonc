@@ -1,6 +1,6 @@
 {
     "hyprland/workspaces": {
-        "all-outputs": true,
+        "all-outputs": false,
         "active-only": false,
         "on-click": "hyprctl dispatch 'hl.dsp.focus({workspace=\"{id}\"})'",
         "disable-scroll": false,

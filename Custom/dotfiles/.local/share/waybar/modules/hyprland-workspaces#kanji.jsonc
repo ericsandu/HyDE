@@ -2,7 +2,7 @@
     "hyprland/workspaces#kanji": {
         "rotate": 0,
         "class": "no-margin-padding",
-        "all-outputs": true,
+        "all-outputs": false,
         "active-only": false,
         "on-click": "hyprctl dispatch 'hl.dsp.focus({workspace=\"{id}\"})'",
         "disable-scroll": false,
