@@ -76,6 +76,10 @@ if [ $KEEP_CONFIG -eq 0 ]; then
   echo ":: Cleaning up existing configurations before install to prevent stow conflicts..."
   if [ -d "${scrDir}/Custom/dotfiles/.config" ]; then
     find "${scrDir}/Custom/dotfiles/.config" -mindepth 1 -maxdepth 1 -printf "%f\n" 2>/dev/null | while read -r f; do
+      if [ "$f" = "nvim" ]; then
+        echo ":: Skipping cleanup for nvim to preserve user configuration..."
+        continue
+      fi
       rm -rf "${HOME}/.config/$f"
     done
   fi
