@@ -49,8 +49,8 @@ if [ $DOTS_ONLY -eq 1 ]; then
   sed -i 's/"..\/dots\/archives.toml",//g' "${scrDir}/Scripts/dots-groups/core.toml"
 
   if [ -f "${deez_exe}" ]; then
-    "${deez_exe}" --source "${scrDir}" --config "${scrDir}/Scripts/dots-groups/core.toml" dots --skip-git --deploy all
-    "${deez_exe}" --source "${scrDir}" --config "${scrDir}/Scripts/dots-groups/extra.toml" dots --skip-git --deploy all
+    "${deez_exe}" --source "${scrDir}" --config "${scrDir}/Scripts/dots-groups/core.toml" dots --skip-git --no-deps-checks --deploy all
+    "${deez_exe}" --source "${scrDir}" --config "${scrDir}/Scripts/dots-groups/extra.toml" dots --skip-git --no-deps-checks --deploy all
   else
     echo ":: deez-dots not found. Ensure the Python environment is set up."
   fi
