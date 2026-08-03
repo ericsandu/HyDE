@@ -30,4 +30,4 @@ paths = ["hyprland.lua"]
 action = "sync"
 source_root = "Configs/.config/hypr"
 target_root = "${XDG_CONFIG_HOME}/hypr"
-paths = ["shaders", "themes", "animations"]
+paths = ["shaders", "themes"]
