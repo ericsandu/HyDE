@@ -102,7 +102,7 @@ hl.bind(MOD .. " + B", hl.dsp.exec_cmd("zen-browser"))
 hl.bind("CTRL" .. " + " .. "ALT" .. " + Delete", hl.dsp.exec_cmd("hyde-shell system.monitor"))
 hl.bind(
 	MOD .. " + Space",
-	hl.dsp.exec_cmd("bash -c \"pkill -x rofi || hyde-shell rofilaunch d -theme-str 'window {location: southeast;}'\"")
+	hl.dsp.exec_cmd("bash -c \"pkill -x rofi || hyde-shell rofilaunch d -theme-str 'window {location: southeast; x-offset: -8px; y-offset: -8px;}'\"")
 )
 hl.bind(MOD .. " + P", hl.dsp.exec_cmd('bash -c "hyde-shell screenshot s # partial screenshot capture"'))
 hl.bind(
