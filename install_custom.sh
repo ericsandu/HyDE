@@ -49,24 +49,13 @@ else
   echo ":: Keep configs flag passed. Skipping pre-install cleanup of existing dotfiles."
 fi
 
-MAX_RETRIES=3
-RETRY_COUNT=0
-while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
-  "${scrDir}/Scripts/install.sh" "$@"
-  EXIT_CODE=$?
-  if [ $EXIT_CODE -eq 0 ]; then
-    break
-  fi
-  RETRY_COUNT=$((RETRY_COUNT+1))
-  if [ $RETRY_COUNT -lt $MAX_RETRIES ]; then
-    echo ":: Installer failed with exit code $EXIT_CODE (likely a network drop). Retrying in 10 seconds... ($RETRY_COUNT/$MAX_RETRIES)"
-    sleep 10
-  else
-    echo ":: Installer failed after $MAX_RETRIES attempts. Aborting."
-    git -C "${scrDir}" restore Scripts/dots/*.toml 2>/dev/null || true
-    exit 1
-  fi
-done
+"${scrDir}/Scripts/install.sh" "$@"
+EXIT_CODE=$?
+if [ $EXIT_CODE -ne 0 ]; then
+  echo ":: Installer failed with exit code $EXIT_CODE. Aborting."
+  git -C "${scrDir}" restore Scripts/dots/*.toml 2>/dev/null || true
+  exit $EXIT_CODE
+fi
 
 # Restore the TOML manifests to their original state to keep the git tree clean
 git -C "${scrDir}" restore Scripts/dots/*.toml 2>/dev/null || true
@@ -103,10 +92,10 @@ NVIM_CUSTOM_REPO=${NVIM_CUSTOM_REPO:-"https://github.com/ericsandu/lazyvim"}
 if [ -n "${NVIM_CUSTOM_REPO}" ]; then
   if [ -e "${HOME}/.config/nvim" ]; then
     read -p ":: Path ~/.config/nvim already exists. Remove contents and install custom Neovim configuration? [y/N]: " nvim_confirm
-    nvim_confirm=${nvim_confirm:-N}
   else
-    nvim_confirm="Y"
+    read -p ":: Do you want to install the custom Neovim configuration? [y/N]: " nvim_confirm
   fi
+  nvim_confirm=${nvim_confirm:-N}
 
   if [[ "$nvim_confirm" =~ ^[Yy]$ ]]; then
     echo ":: Installing custom Neovim configuration..."
