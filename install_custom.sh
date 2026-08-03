@@ -30,11 +30,41 @@ if ! command -v luarocks >/dev/null 2>&1; then
 fi
 
 KEEP_CONFIG=0
+DOTS_ONLY=0
 for arg in "$@"; do
   if [ "$arg" = "-i" ] || [ "$arg" = "--install" ]; then
     KEEP_CONFIG=1
   fi
+  if [ "$arg" = "--dots" ]; then
+    DOTS_ONLY=1
+  fi
 done
+
+if [ $DOTS_ONLY -eq 1 ]; then
+  echo ":: Updating dotfiles only..."
+  python_env_dir="${HOME}/.local/state/hyde/python_env"
+  deez_exe="${python_env_dir}/bin/deez"
+  if [ -f "${deez_exe}" ]; then
+    "${deez_exe}" --source "${scrDir}" --config "${scrDir}/Scripts/dots-groups/core.toml" dots --skip-git --deploy all
+    "${deez_exe}" --source "${scrDir}" --config "${scrDir}/Scripts/dots-groups/extra.toml" dots --skip-git --deploy all
+  else
+    echo ":: deez-dots not found. Ensure the Python environment is set up."
+  fi
+  if [ -d "${scrDir}/Custom/dotfiles/.config" ]; then
+    cp -rf "${scrDir}/Custom/dotfiles/.config"/* "${HOME}/.config/"
+  fi
+  if [ -d "${scrDir}/Custom/dotfiles/.local" ]; then
+    cp -rf "${scrDir}/Custom/dotfiles/.local"/* "${HOME}/.local/"
+  fi
+  if [ -n "$XDG_RUNTIME_DIR" ] || [ -n "$DBUS_SESSION_BUS_ADDRESS" ]; then
+    if command -v waybar.py >/dev/null 2>&1; then
+      waybar.py --update || true
+    elif [ -f "${HOME}/.local/lib/hyde/waybar.py" ]; then
+      "${HOME}/.local/lib/hyde/waybar.py" --update || true
+    fi
+  fi
+  exit 0
+fi
 
 if [ $KEEP_CONFIG -eq 0 ]; then
   echo ":: Cleaning up existing configurations before install to prevent stow conflicts..."
