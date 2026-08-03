@@ -44,12 +44,18 @@ if [ $DOTS_ONLY -eq 1 ]; then
   echo ":: Updating dotfiles only..."
   python_env_dir="${HOME}/.local/state/hyde/python_env"
   deez_exe="${python_env_dir}/bin/deez"
+
+  echo ":: Bypassing fonts and cursors..."
+  sed -i 's/"..\/dots\/archives.toml",//g' "${scrDir}/Scripts/dots-groups/core.toml"
+
   if [ -f "${deez_exe}" ]; then
     "${deez_exe}" --source "${scrDir}" --config "${scrDir}/Scripts/dots-groups/core.toml" dots --skip-git --deploy all
     "${deez_exe}" --source "${scrDir}" --config "${scrDir}/Scripts/dots-groups/extra.toml" dots --skip-git --deploy all
   else
     echo ":: deez-dots not found. Ensure the Python environment is set up."
   fi
+
+  git -C "${scrDir}" restore Scripts/dots-groups/core.toml 2>/dev/null || true
   if [ -d "${scrDir}/Custom/dotfiles/.config" ]; then
     cp -rf "${scrDir}/Custom/dotfiles/.config"/* "${HOME}/.config/"
   fi
