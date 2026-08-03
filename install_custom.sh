@@ -12,12 +12,23 @@ fi
 
 if [ -s "${scrDir}/Custom/pkg_custom.lst" ]; then
   echo ":: Patching upstream manifests to include custom packages..."
-  custom_pkgs=$(grep -vE '^\s*#|^\s*$' "${scrDir}/Custom/pkg_custom.lst" | awk '{print "\""$1"\","}' | tr '\n' ' ')
+  pacman_pkgs=""
+  yay_pkgs=""
+  while read -r pkg_name; do
+    repo=$(pacman -Si "$pkg_name" 2>/dev/null | grep -i "^Repository" | awk -F': ' '{print $2}' | tr -d ' ' | tr -d '\r')
+    if [ -z "$repo" ] || [ "$repo" = "chaotic-aur" ]; then
+      yay_pkgs="${yay_pkgs}\"${pkg_name}\", "
+    else
+      pacman_pkgs="${pacman_pkgs}\"${pkg_name}\", "
+    fi
+  done < <(grep -vE '^\s*#|^\s*$' "${scrDir}/Custom/pkg_custom.lst" | awk '{print $1}')
+  
   cat <<EOF >> "${scrDir}/Scripts/dots/deps.toml"
 
 [[global.dependency]]
-yay = [ ${custom_pkgs} ]
-paru = [ ${custom_pkgs} ]
+pacman = [ ${pacman_pkgs} ]
+yay = [ ${yay_pkgs} ]
+paru = [ ${yay_pkgs} ]
 EOF
 fi
 
