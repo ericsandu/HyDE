@@ -78,5 +78,5 @@ paru = [
 ]
 
 [[global.dependency]]
-yay = [ "thunar", "gvfs", "tumbler", "neovim", "file-roller", "zathura", "zathura-pdf-poppler", "zen-browser-bin", "bat", "fd", "mpv", "yt-dlp", "imv", "btop",  ]
-paru = [ "thunar", "gvfs", "tumbler", "neovim", "file-roller", "zathura", "zathura-pdf-poppler", "zen-browser-bin", "bat", "fd", "mpv", "yt-dlp", "imv", "btop",  ]
+yay = [ "thunar", "gvfs", "tumbler", "neovim", "file-roller", "zathura", "zathura-pdf-poppler", "zen-browser-bin", "bat", "fd", "mpv", "yt-dlp", "imv", "btop", "bibata-cursor-theme-bin" ]
+paru = [ "thunar", "gvfs", "tumbler", "neovim", "file-roller", "zathura", "zathura-pdf-poppler", "zen-browser-bin", "bat", "fd", "mpv", "yt-dlp", "imv", "btop", "bibata-cursor-theme-bin" ]
