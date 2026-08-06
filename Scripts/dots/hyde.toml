@@ -100,7 +100,7 @@ action = "sync"
 target_root = "${HOME}/.local/lib/hyde/screenshot"
 paths = "grimblast"
 owner = "hyprwm-contrib"
-post_command = "chmod +x ${HOME}/.local/lib/hyde/screenshot/grimblast"
+post_command = "chmod +x ${HOME}/.local/lib/hyde/screenshot/grimblast && sed -i '/slurp -o/d' ${HOME}/.local/lib/hyde/screenshot/grimblast"
 
 [xdg-terminal-exec]
 version = "0.14.0"
