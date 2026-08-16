@@ -20,7 +20,7 @@
     "group/leaf-inverse#left1": {
         "orientation": "inherit",
         "modules": [
-	    "custom/launcher",
+	          "custom/app-launcher",
             "hyprland/window",
             "hyprland/workspaces"
         ]
