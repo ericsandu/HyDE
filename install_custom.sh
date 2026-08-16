@@ -22,12 +22,31 @@ patch_group_manifests() {
     "${scrDir}/Scripts/dots-groups/extra.toml"
 }
 
+# Drop tarball-backed font/cursor sections from archives.toml (installed via
+# pacman/AUR instead, see pkg_custom.lst). icon-wallbash is kept: it ships in
+# the repo and the icon theme tests require it to stay deployable.
+patch_archives_manifest() {
+  [ -s "${scrDir}/Custom/archives_black.lst" ] || return 0
+  awk -v skip="$(grep -vE '^\s*(#|$)' "${scrDir}/Custom/archives_black.lst" | paste -sd'|')" '
+    BEGIN { in_skip = 0 }
+    /^[[:space:]]*\[/ {
+      sec = $0
+      gsub(/[\[\]]/, "", sec)
+      gsub(/[[:space:]]/, "", sec)
+      in_skip = (skip != "" && sec ~ "^(" skip ")(\\.|$)") ? 1 : 0
+    }
+    !in_skip { print }
+  ' "${scrDir}/Scripts/dots/archives.toml" > "${scrDir}/Scripts/dots/archives.toml.patched" &&
+    mv "${scrDir}/Scripts/dots/archives.toml.patched" "${scrDir}/Scripts/dots/archives.toml"
+}
+
 restore_patched_files() {
   git -C "${scrDir}" restore Scripts/dots/*.toml Scripts/dots-groups/*.toml Scripts/install.sh 2>/dev/null || true
 }
 
 patch_upstream_manifests() {
   patch_group_manifests
+  patch_archives_manifest
 }
 
 # Dynamically strip blacklisted packages and inject custom packages into TOML manifests

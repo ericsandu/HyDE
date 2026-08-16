@@ -1,0 +1,12 @@
+# Sections of Scripts/dots/archives.toml to skip at install time.
+# The fork installs these assets through pacman/AUR (see pkg_custom.lst)
+# instead of letting deez-dots extract tarballs, which needs sudo for the
+# system-wide cursor targets and downloads fonts we already package.
+cursor-bibata-modern-ice
+hyprcursor-bibata-modern-ice
+font-cantarell
+font-caskaydia-cove
+font-jetbrains-mono
+font-maple-mono
+font-mononoki
+font-noto-sans-cjk-ttc
