@@ -26,13 +26,18 @@ hyde_distro_logo=$iconDir/Wallbash-Icon/distro/$LOGO
 case $1 in
     logo)
         random() {
-            local wall_sqre="$cacheDir/wall.sqre"
-            local wall_quad="$cacheDir/wall.quad"
-            if [ -f "$wall_sqre" ]; then
-                echo "$wall_sqre"
-            elif [ -f "$wall_quad" ]; then
-                echo "$wall_quad"
-            fi
+            (   
+                image_dirs+=("$confDir/fastfetch/logo")
+                image_dirs+=("$iconDir/Wallbash-Icon/fastfetch/")
+                if [ -n "$HYDE_THEME" ] && [ -d "$confDir/hyde/themes/$HYDE_THEME/logo" ]; then
+                    image_dirs+=("$confDir/hyde/themes/$HYDE_THEME/logo")
+                fi
+                [ -f "$hyde_distro_logo" ] && echo "$hyde_distro_logo"
+                image_dirs+=("$cacheDir/wall.quad")
+                image_dirs+=("$cacheDir/wall.sqre")
+                [ -f "$HOME/.face.icon" ] && image_dirs+=("$HOME/.face.icon")
+                find -L "${image_dirs[@]}" -maxdepth 1 -type f \( -name "wall.quad" -o -name "wall.sqre" -o -name "*.icon" -o -name "*logo*" -o -name "*.png" \) ! -path "*/wall.set*" ! -path "*/wallpapers/*.png" 2> /dev/null
+            ) | shuf -n 1
         }
         help() {
             cat << HELP

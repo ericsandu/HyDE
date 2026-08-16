@@ -78,8 +78,8 @@ window#waybar {
     background: @wb-act-bg;
     color: @wb-act-fg;
     margin-left: 0.3em;
-    padding-left: 0.3em;
-    padding-right: 0.3em;
+    padding-left: 1.2em;
+    padding-right: 1.2em;
     margin-right: 0.3em;
     animation: ws_active 20s ease-in-out 1;
     transition: all 0.4s cubic-bezier(.55, -0.68, .48, 1.682);
