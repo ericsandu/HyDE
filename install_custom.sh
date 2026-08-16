@@ -18,7 +18,7 @@ patch_group_manifests() {
   sed -i -E 's|https://github\.com/HyDE-Project/HyDE\.git|https://github.com/ericsandu/HyDE.git|g;
               s|(git_branch[[:space:]]*=[[:space:]]*)"lua"|\1"master"|g' \
     "${scrDir}/Scripts/dots-groups/"*.toml
-  sed -i -E '/\.\.\/dots\/(dolphin|baloofilrc|zsh|fish)\.toml/d' \
+  sed -i -E '/\.\.\/dots\/(dolphin|baloofilerc|zsh|fish)\.toml/d' \
     "${scrDir}/Scripts/dots-groups/extra.toml"
 }
 
@@ -87,7 +87,7 @@ if [ -s "${scrDir}/Custom/pkg_custom.lst" ]; then
       pacman_pkgs="${pacman_pkgs}\"${pkg_name}\", "
     fi
   done < <(grep -vE '^\s*#|^\s*$' "${scrDir}/Custom/pkg_custom.lst" | awk '{print $1}')
-  
+
   cat <<EOF >> "${scrDir}/Scripts/dots/deps.toml"
 
 [[global.dependency]]
@@ -266,6 +266,10 @@ if [ $KEEP_CONFIG -eq 0 ]; then
     mkdir -p "${HOME}/.local"
     cp -rf "${scrDir}/Custom/dotfiles/.local"/* "${HOME}/.local/"
   fi
+  # Drop wallbash hooks that pin volume/brightness SVG icons to 120px so they scale
+  rm -f "${HOME}"/.local/share/wallbash/always/00-icons/vol-*.dcol \
+        "${HOME}"/.local/share/wallbash/always/00-icons/muted-*.dcol \
+        "${HOME}"/.local/share/wallbash/always/00-icons/unmuted-*.dcol
   # Create blank stubs for files sourced by configs (prevents globbing errors if upstream hasn't deployed them)
   touch "${HOME}/.config/hypr/workflows.conf"
   mkdir -p "${HOME}/.local/share/hypr"
