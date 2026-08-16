@@ -5,6 +5,7 @@ tumbler                                                # Thumbnail support for T
 neovim                                                 # Neovim text editor
 ttf-nerd-fonts-symbols                                 # Nerd font symbols
 ttf-jetbrains-mono-nerd                                # Jetbrains mono nerd font
+ttf-cascadia-code-nerd                                 # CaskaydiaCove nerd font (kitty default)
 file-roller                                            # Archive manager
 zathura                                                # PDF viewer
 zathura-pdf-poppler                                    # Poppler backend for Zathura
