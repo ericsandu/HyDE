@@ -15,3 +15,5 @@ mpv                                                    # Minimal video player
 yt-dlp                                                 # YouTube and video downloader
 imv                                                    # Wayland image viewer
 btop                                                   # System monitor
+vim                                                    # Terminal text editor
+bibata-cursor-theme-bin                                # Bibata cursor theme (AUR)
