@@ -44,23 +44,13 @@ while read -r lst; do
 
     if [ -w "${tgt}" ]; then
         # shellcheck disable=SC2154
-        if [ -f "${cloneDir}/Source/arcs/${fnt}.tar.gz" ]; then
-            [ "${flg_DryRun}" -eq 1 ] || tar -xzf "${cloneDir}/Source/arcs/${fnt}.tar.gz" -C "${tgt}/"
-        else
-            print_log -warn "skip" "${fnt}.tar.gz not found"
-            continue
-        fi
+        [ "${flg_DryRun}" -eq 1 ] || tar -xzf "${cloneDir}/Source/arcs/${fnt}.tar.gz" -C "${tgt}/"
     else
         print_log -warn "not writable" "Extracting as root: ${tgt} "
         if [ "${flg_DryRun}" -ne 1 ]; then
-            if [ -f "${cloneDir}/Source/arcs/${fnt}.tar.gz" ]; then
-                if ! sudo tar -xzf "${cloneDir}/Source/arcs/${fnt}.tar.gz" -C "${tgt}/" 2>/dev/null; then
-                    print_log -err "extraction by root FAILED" " giving up..."
-                    print_log "The above error can be ignored if the '${tgt}' is not writable..."
-                fi
-            else
-                print_log -warn "skip" "${fnt}.tar.gz not found"
-                continue
+            if ! sudo tar -xzf "${cloneDir}/Source/arcs/${fnt}.tar.gz" -C "${tgt}/" 2>/dev/null; then
+                print_log -err "extraction by root FAILED" " giving up..."
+                print_log "The above error can be ignored if the '${tgt}' is not writable..."
             fi
         fi
     fi

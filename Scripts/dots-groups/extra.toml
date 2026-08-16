@@ -1,8 +1,8 @@
 # Use for instalation script until we refactor the whole installation stack
 [global]
     action       = "preserve"                                 #
-    git          = "https://github.com/ericsandu/HyDE.git"
-    git_branch   = "master"
+    git          = "https://github.com/HyDE-Project/HyDE.git"
+    git_branch   = "lua"
     owner        = "The HyDE Project"                         #
     post_command = "hyprctl reload"
     pre_command  = "echo 'HyDE Core Configurations'"
@@ -10,8 +10,12 @@
     # dots = ["kitty", "hyprland"] # List of dots to be used in the configuration file
     # We can call it core packages!
     include = [
+        "../dots/zsh.toml",
+        "../dots/fish.toml",
         "../dots/deps.toml",
         "../dots/electron.toml",
+        "../dots/baloofilerc.toml",
+        "../dots/dolphin.toml",
         "../dots/kitty.toml",
         "../dots/hyprlock.toml",
         "../dots/hypridle.toml",

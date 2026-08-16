@@ -25,9 +25,3 @@ action = "preserve"
 source_root = "Configs/.config/hypr"
 target_root = "${XDG_CONFIG_HOME}/hypr/"
 paths = ["hyprland.lua"]
-
-[[hyprland.files]]
-action = "sync"
-source_root = "Configs/.config/hypr"
-target_root = "${XDG_CONFIG_HOME}/hypr"
-paths = ["shaders", "themes"]

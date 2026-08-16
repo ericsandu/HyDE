@@ -1,8 +1,8 @@
 # Use for instalation script until we refactor the whole installation stack
 [global]
     action      = "preserve"                                 #
-    git         = "https://github.com/ericsandu/HyDE.git"
-    git_branch  = "master"
+    git         = "https://github.com/HyDE-Project/HyDE.git"
+    git_branch  = "lua"
     owner       = "The HyDE Project"                         #
     pre_command = "echo 'starting deployment'"
     version     = "0.1.0"
@@ -16,7 +16,6 @@
         "../dots/wallbash.toml",
         "../dots/waybar.toml",
         "../dots/rofi.toml",
-        "../dots/wlogout.toml",
     ]
 
 # Loads an array of package manager commands

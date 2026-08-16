@@ -405,12 +405,11 @@ EOF
 		"${deez_exe}" --source "${cloneDir}" --config "${scrDir}/dots-groups/core.toml" dots --skip-git --deploy all || exit 1
 
 		print_log -g "[DEEZ-DOTS] " -b "deploy :: " "Installing extra dotfiles..."
-		"${deez_exe}" --source "${cloneDir}" --config "${scrDir}/dots-groups/extra.toml" dots --skip-git --deploy all || exit 1
+		"${deez_exe}" --source "${cloneDir}" --config "${scrDir}/dots-groups/extra.toml" dots --skip-git --deploy || exit 1
 
 		print_log -g "[DEEZ-DOTS] " -b "complete :: " "Dotfiles deployed"
 	fi
 
-	"${scrDir}/restore_fnt.sh"
 	"${scrDir}/restore_thm.sh"
 	print_log -g "[generate] " "cache ::" "Wallpapers..."
 	if [ "${flg_DryRun}" -ne 1 ]; then

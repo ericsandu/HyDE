@@ -3,8 +3,8 @@
     # dots = ["kitty", "hyprland"] # List of dots to be used in the configuration file
     action = "preserve" #
     description = "Optional configurations you can install later"
-    git = "https://github.com/ericsandu/HyDE.git"
-    git_branch = "master"
+    git = "https://github.com/HyDE-Project/HyDE.git"
+    git_branch = "lua"
     include = [
         "../dots/lsd.toml",
         "../dots/libinput-gestures.toml",

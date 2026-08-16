@@ -11,6 +11,7 @@ target_root = "${XDG_CONFIG_HOME}"
 paths = ["hyde/wallbash"]
 
 [[hyde.files]]
+clean_target = true
 action = "sync"
 source_root = "Configs/.local/lib"
 target_root = "${HOME}/.local/lib"
@@ -23,6 +24,7 @@ ignored_paths = [".*", "__pycache__"]
 # target_root = "${XDG_DATA_HOME}"
 # paths = ["icons/Wallbash-Icon", "themes/Wallbash-Gtk"]
 [[hyde.files]]
+clean_target = true
 action = "sync"
 source_root = "Configs/.local/share"
 target_root = "${XDG_DATA_HOME}"
@@ -33,7 +35,7 @@ ignored_paths = [".*", "__pycache__", "schema"]
 action = "sync"
 source_root = "Configs/.config"
 target_root = "${XDG_CONFIG_HOME}"
-paths = ["gtk-3.0", "Kvantum", "nwg-look", "qt5ct", "qt6ct", "xsettingsd", "dconf"]
+paths = ["gtk-3.0", "Kvantum", "nwg-look", "qt5ct", "qt6ct", "xsettingsd"]
 ignored_paths = [
     "qt5ct/qt5ct.conf",
     "qt6ct/qt6ct.conf",
@@ -54,8 +56,6 @@ action = "preserve"
 source_root = "Configs/.config/hyde"
 target_root = "${XDG_CONFIG_HOME}/hyde"
 paths = "config.toml"
-
-
 
 [[hyde.files]]
 action = "preserve"
@@ -100,7 +100,7 @@ action = "sync"
 target_root = "${HOME}/.local/lib/hyde/screenshot"
 paths = "grimblast"
 owner = "hyprwm-contrib"
-post_command = "chmod +x ${HOME}/.local/lib/hyde/screenshot/grimblast && sed -i '/slurp -o/d' ${HOME}/.local/lib/hyde/screenshot/grimblast"
+post_command = "chmod +x ${HOME}/.local/lib/hyde/screenshot/grimblast"
 
 [xdg-terminal-exec]
 version = "0.14.0"
