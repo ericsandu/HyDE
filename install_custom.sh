@@ -56,6 +56,14 @@ patch_install_script() {
     "${scrDir}/Scripts/install.sh"
 }
 
+# Drop wallbash hooks that pin volume/brightness SVG icons to 120px so they
+# scale; upstream ships them, the fork wants them gone from the deployed home.
+strip_fixed_size_icon_hooks() {
+  rm -f "${HOME}"/.local/share/wallbash/always/00-icons/vol-*.dcol \
+        "${HOME}"/.local/share/wallbash/always/00-icons/muted-*.dcol \
+        "${HOME}"/.local/share/wallbash/always/00-icons/unmuted-*.dcol
+}
+
 restore_patched_files() {
   git -C "${scrDir}" restore Scripts/dots/*.toml Scripts/dots-groups/*.toml Scripts/install.sh 2>/dev/null || true
 }
@@ -140,6 +148,7 @@ if [ $DOTS_ONLY -eq 1 ]; then
   if [ -d "${scrDir}/Custom/dotfiles/.local" ]; then
     cp -rf "${scrDir}/Custom/dotfiles/.local"/* "${HOME}/.local/"
   fi
+  strip_fixed_size_icon_hooks
   if [ -n "$XDG_RUNTIME_DIR" ] || [ -n "$DBUS_SESSION_BUS_ADDRESS" ]; then
     if command -v waybar.py >/dev/null 2>&1; then
       waybar.py --update || true
@@ -266,10 +275,7 @@ if [ $KEEP_CONFIG -eq 0 ]; then
     mkdir -p "${HOME}/.local"
     cp -rf "${scrDir}/Custom/dotfiles/.local"/* "${HOME}/.local/"
   fi
-  # Drop wallbash hooks that pin volume/brightness SVG icons to 120px so they scale
-  rm -f "${HOME}"/.local/share/wallbash/always/00-icons/vol-*.dcol \
-        "${HOME}"/.local/share/wallbash/always/00-icons/muted-*.dcol \
-        "${HOME}"/.local/share/wallbash/always/00-icons/unmuted-*.dcol
+  strip_fixed_size_icon_hooks
   # Create blank stubs for files sourced by configs (prevents globbing errors if upstream hasn't deployed them)
   touch "${HOME}/.config/hypr/workflows.conf"
   mkdir -p "${HOME}/.local/share/hypr"
