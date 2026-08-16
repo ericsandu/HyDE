@@ -50,6 +50,12 @@ patch_hyde_manifest() {
   sed -i 's|post_command = "chmod +x ${HOME}/.local/lib/hyde/screenshot/grimblast"|post_command = "chmod +x ${HOME}/.local/lib/hyde/screenshot/grimblast \&\& sed -i '\''/slurp -o/d'\'' ${HOME}/.local/lib/hyde/screenshot/grimblast"|' "$f"
 }
 
+# Deploy every extra dot without deez's interactive picker
+patch_install_script() {
+  sed -i 's|dots-groups/extra\.toml" dots --skip-git --deploy \|\||dots-groups/extra.toml" dots --skip-git --deploy all \|\||' \
+    "${scrDir}/Scripts/install.sh"
+}
+
 restore_patched_files() {
   git -C "${scrDir}" restore Scripts/dots/*.toml Scripts/dots-groups/*.toml Scripts/install.sh 2>/dev/null || true
 }
@@ -58,6 +64,7 @@ patch_upstream_manifests() {
   patch_group_manifests
   patch_archives_manifest
   patch_hyde_manifest
+  patch_install_script
 }
 
 # Dynamically strip blacklisted packages and inject custom packages into TOML manifests
