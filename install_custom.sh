@@ -40,6 +40,16 @@ patch_archives_manifest() {
     mv "${scrDir}/Scripts/dots/archives.toml.patched" "${scrDir}/Scripts/dots/archives.toml"
 }
 
+patch_hyde_manifest() {
+  local f="${scrDir}/Scripts/dots/hyde.toml"
+  # Never wipe user-installed files under .local/lib and .local/share
+  sed -i '/^[[:space:]]*clean_target[[:space:]]*=[[:space:]]*true/d' "$f"
+  # Deploy the hyde dconf profile (theme switching needs it on fresh installs)
+  sed -i 's|"qt5ct", "qt6ct", "xsettingsd"|"qt5ct", "qt6ct", "xsettingsd", "dconf"|' "$f"
+  # hyprwm-contrib grimblast slurps twice on area selection; drop the redundant call
+  sed -i 's|post_command = "chmod +x ${HOME}/.local/lib/hyde/screenshot/grimblast"|post_command = "chmod +x ${HOME}/.local/lib/hyde/screenshot/grimblast \&\& sed -i '\''/slurp -o/d'\'' ${HOME}/.local/lib/hyde/screenshot/grimblast"|' "$f"
+}
+
 restore_patched_files() {
   git -C "${scrDir}" restore Scripts/dots/*.toml Scripts/dots-groups/*.toml Scripts/install.sh 2>/dev/null || true
 }
@@ -47,6 +57,7 @@ restore_patched_files() {
 patch_upstream_manifests() {
   patch_group_manifests
   patch_archives_manifest
+  patch_hyde_manifest
 }
 
 # Dynamically strip blacklisted packages and inject custom packages into TOML manifests
