@@ -5,3 +5,4 @@ visual-studio-code-bin                                 # Alternative package nam
 vscode-bin                                             # Alternative package names for VS Code
 ark                                                    # KDE archive manager
 firefox                                                # Mozilla Firefox browser
+electron                                               # Standalone electron runtime (flags deploy without it)
