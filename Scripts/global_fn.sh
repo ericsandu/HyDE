@@ -46,6 +46,52 @@ chk_list() {
     return 1
 }
 
+chk_shell() {
+    local candidate="${1:-}"
+    local shell
+    [ -n "${candidate}" ] || return 1
+    for shell in "${shlList[@]}"; do
+        [ "${shell}" = "${candidate}" ] && return 0
+    done
+    return 1
+}
+
+login_shell() {
+    local entry
+    entry="$(getent passwd "${USER}")" || return 1
+    [ -n "${entry##*:}" ] || return 1
+    basename "${entry##*:}"
+}
+
+shell_listed() {
+    local wanted listed
+    local shells="${2:-/etc/shells}"
+    # The same shell is listed under /bin or /usr/bin, so both sides resolve.
+    wanted="$(realpath -e "${1}" 2>/dev/null)" || return 1
+    [ -f "${shells}" ] || return 0
+    # The guard keeps a last line that carries no trailing newline.
+    while IFS= read -r listed || [ -n "${listed}" ]; do
+        listed="${listed%%#*}"
+        listed="${listed//[[:space:]]/}"
+        [ -n "${listed}" ] || continue
+        [ "$(realpath -e "${listed}" 2>/dev/null)" = "${wanted}" ] && return 0
+    done < "${shells}"
+    return 1
+}
+
+resolve_shell() {
+    local current
+    chk_shell "${myShell:-}" && return 0
+    # The shell already logged in with outranks the order of the list.
+    current="$(login_shell || true)"
+    if chk_shell "${current}"; then
+        myShell="${current}"
+        export myShell
+        return 0
+    fi
+    chk_list "myShell" "${shlList[@]}"
+}
+
 pkg_available() {
     local PkgIn=$1
 
@@ -179,6 +225,37 @@ print_log() {
     else
         cat
     fi
+}
+
+# Creates the Python environment and syncs it against this checkout's lock.
+#
+# The dot deployment, the dependency checks and hyde-shell all run out of that
+# environment, and the revisions they run are the ones this checkout pins. A
+# run that skips this works with whatever was installed the last time it did
+# not, so a corrected pin never reaches the machine that needs it. It lives
+# here rather than in a script of its own so the pre-install path and the
+# installer cannot drift apart.
+setup_python_env() {
+    local pyutils="${cloneDir}/Configs/.local/lib/hyde/pyutils/python_env.py"
+    local python_env_dir="${HOME}/.local/state/hyde/python_env"
+
+    if [ "${flg_DryRun:-0}" -eq 1 ]; then
+        print_log -y "[PYTHON] " -b "dry-run :: " "Would setup Python environment"
+        return 0
+    fi
+
+    if ! python3 "${pyutils}" create; then
+        print_log -err "[PYTHON] " -crit "ERROR" "Failed to create the Python environment; the error above says why"
+        print_log -err "[PYTHON] " -crit "HINT" "A missing python3 or base-devel is the usual cause"
+        return 1
+    fi
+
+    if ! "${python_env_dir}/bin/python" "${pyutils}" sync; then
+        print_log -err "[PYTHON] " -crit "ERROR" "Failed to install dependencies"
+        return 1
+    fi
+
+    print_log -g "[PYTHON] " -b "complete :: " "Environment setup complete"
 }
 
 # Runs each migration in "$1" missing from the record in "$2", in version order,
