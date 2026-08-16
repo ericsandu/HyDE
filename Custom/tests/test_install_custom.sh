@@ -13,6 +13,14 @@
 #     no removals
 #   - the Custom overlay lands on top and the fixed-size wallbash icon
 #     hooks are dropped from the deployed home
+#   - the standard rofi theme lookup path points at the deployed themes
+#
+# The deployer is always a stub here on purpose: the real deez cannot be
+# isolated with HOME/XDG environment overrides. It resolves the XDG roots
+# from /etc/passwd and uninstalls whatever its registry points at, so a
+# "sandboxed" run against a live machine both writes outside the sandbox
+# and deletes registry paths. Only OS-level isolation (a throwaway user)
+# can safely run the real deployer.
 
 _failures=0
 
@@ -209,6 +217,8 @@ cmp -s "$home_dir/.config/hypr/hyprland.lua" "$repo_dir/Custom/dotfiles/.config/
     fail "the stale config file survived the cleanup"
 [ ! -e "$home_dir/.local/share/wallbash/always/00-icons/vol-50.dcol" ] ||
     fail "the fixed-size wallbash icon hook survived"
+[ "$(readlink "$home_dir/.local/share/rofi/themes")" = "$home_dir/.local/share/hyde/rofi/themes" ] ||
+    fail "the rofi theme lookup path does not point at the deployed themes"
 [ "$(grep -c WAYBAR_LAYOUT_NAME "$home_dir/.local/state/hyde/staterc")" -eq 1 ] ||
     fail "the state seed duplicated an existing entry"
 
@@ -238,5 +248,7 @@ cmp -s "$home_dir/.config/hypr/hyprland.lua" "$repo_dir/Custom/dotfiles/.config/
     fail "dots-only mode did not redeploy the Custom overlay"
 [ ! -e "$home_dir/.local/share/wallbash/always/00-icons/vol-50.dcol" ] ||
     fail "dots-only mode left the fixed-size icon hook in place"
+[ "$(readlink "$home_dir/.local/share/rofi/themes")" = "$home_dir/.local/share/hyde/rofi/themes" ] ||
+    fail "dots-only mode lost the rofi theme lookup link"
 
 finish

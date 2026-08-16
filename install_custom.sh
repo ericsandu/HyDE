@@ -64,6 +64,18 @@ strip_fixed_size_icon_hooks() {
         "${HOME}"/.local/share/wallbash/always/00-icons/unmuted-*.dcol
 }
 
+# Rofi resolves named themes ("-theme style_7") against
+# $XDG_DATA_HOME/rofi/themes, but HyDE deploys them under
+# $XDG_DATA_HOME/hyde/rofi/themes. Link the standard lookup path to the
+# deployed tree so launcher styling survives fresh homes and updates.
+link_rofi_theme_dir() {
+  local themes="${HOME}/.local/share/rofi/themes"
+  [ -L "$themes" ] && return 0
+  rm -rf "$themes"
+  mkdir -p "$(dirname "$themes")"
+  ln -s "${HOME}/.local/share/hyde/rofi/themes" "$themes"
+}
+
 restore_patched_files() {
   git -C "${scrDir}" restore Scripts/dots/*.toml Scripts/dots-groups/*.toml Scripts/install.sh 2>/dev/null || true
 }
@@ -149,6 +161,7 @@ if [ $DOTS_ONLY -eq 1 ]; then
     cp -rf "${scrDir}/Custom/dotfiles/.local"/* "${HOME}/.local/"
   fi
   strip_fixed_size_icon_hooks
+  link_rofi_theme_dir
   if [ -n "$XDG_RUNTIME_DIR" ] || [ -n "$DBUS_SESSION_BUS_ADDRESS" ]; then
     if command -v waybar.py >/dev/null 2>&1; then
       waybar.py --update || true
@@ -276,6 +289,7 @@ if [ $KEEP_CONFIG -eq 0 ]; then
     cp -rf "${scrDir}/Custom/dotfiles/.local"/* "${HOME}/.local/"
   fi
   strip_fixed_size_icon_hooks
+  link_rofi_theme_dir
   # Create blank stubs for files sourced by configs (prevents globbing errors if upstream hasn't deployed them)
   touch "${HOME}/.config/hypr/workflows.conf"
   mkdir -p "${HOME}/.local/share/hypr"
