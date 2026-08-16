@@ -151,13 +151,12 @@ local function write_state(state_dir, state_file, item)
     ensure_dir(state_dir)
     local shader = item and item.key ~= "disable" and COMPILED or ""
     local f = assert(io.open(state_file, "w"))
-    local dt = (item and item.damage_tracking ~= nil) and item.damage_tracking or 2
     f:write("local shader = ", string.format("%q", shader), "\n")
-    f:write(string.format('if rawget(_G, "hl") then hl.config({ decoration = { screen_shader = shader }, debug = { damage_tracking = %s } }) end\n\n', tostring(dt)))
+    f:write('if rawget(_G, "hl") then hl.config({ decoration = { screen_shader = shader } }) end\n\n')
     f:write("return {\n")
-    for _, k in ipairs({"path", "key", "name", "description", "icon", "damage_tracking"}) do
-        if item and item[k] ~= nil then
-            f:write("  ", k, " = ", type(item[k]) == "string" and string.format("%q", item[k]) or tostring(item[k]), ",\n")
+    for _, k in ipairs({"path", "key", "name", "description", "icon"}) do
+        if item and item[k] then
+            f:write("  ", k, " = ", string.format("%q", item[k]), ",\n")
         end
     end
     f:write("}\n")
@@ -191,10 +190,6 @@ local function read_frag_meta(path)
         if k then
             meta[k:lower()] = v
         end
-        local dt = line:match("^%s*//%s*!damage_tracking%s*=%s*(%d+)%s*$")
-        if dt then
-            meta.damage_tracking = tonumber(dt)
-        end
         if is_glsl_decl(line) then
             break
         end
@@ -224,8 +219,7 @@ local M =
                 key = base,
                 name = meta.name or base,
                 icon = meta.icon or DEFAULT_SHADER_ICON,
-                description = meta.description or ("Shader: " .. base),
-                damage_tracking = meta.damage_tracking
+                description = meta.description or ("Shader: " .. base)
             }
         end,
 
@@ -233,8 +227,7 @@ local M =
         on_set = apply_shader,
         rofi_opts = {
             prioritize = {"00-disable", "disable"}
-        },
-        default_item = "disable"
+        }
     }
 )
 
