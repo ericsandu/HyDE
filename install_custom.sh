@@ -2,6 +2,34 @@
 
 scrDir=$(dirname "$(realpath "$0")")
 
+# ---------------------------------------------------------------------------
+# Upstream manifest patching
+#
+# The fork keeps Configs/ and Scripts/ byte-identical to upstream so merges
+# stay conflict-free. Every behavioural difference is applied here, to the
+# working tree only, and reverted after the installer finishes (see the
+# git restore calls below).
+# ---------------------------------------------------------------------------
+
+# Point deez at this fork instead of upstream and drop dot groups we do not
+# deploy (dolphin/baloofilrc are replaced by thunar; shells are handled by the
+# Custom overlay).
+patch_group_manifests() {
+  sed -i -E 's|https://github\.com/HyDE-Project/HyDE\.git|https://github.com/ericsandu/HyDE.git|g;
+              s|(git_branch[[:space:]]*=[[:space:]]*)"lua"|\1"master"|g' \
+    "${scrDir}/Scripts/dots-groups/"*.toml
+  sed -i -E '/\.\.\/dots\/(dolphin|baloofilrc|zsh|fish)\.toml/d' \
+    "${scrDir}/Scripts/dots-groups/extra.toml"
+}
+
+restore_patched_files() {
+  git -C "${scrDir}" restore Scripts/dots/*.toml Scripts/dots-groups/*.toml Scripts/install.sh 2>/dev/null || true
+}
+
+patch_upstream_manifests() {
+  patch_group_manifests
+}
+
 # Dynamically strip blacklisted packages and inject custom packages into TOML manifests
 if [ -s "${scrDir}/Custom/pkg_black.lst" ]; then
   echo ":: Patching upstream manifests to exclude blacklisted packages..."
@@ -31,6 +59,8 @@ yay = [ ${yay_pkgs} ]
 paru = [ ${yay_pkgs} ]
 EOF
 fi
+
+patch_upstream_manifests
 
 # Run main HyDE installer
 # We pre-install lua and luarocks to bypass a bug in upstream's deez installer
@@ -104,12 +134,12 @@ fi
 EXIT_CODE=$?
 if [ $EXIT_CODE -ne 0 ]; then
   echo ":: Installer failed with exit code $EXIT_CODE. Aborting."
-  git -C "${scrDir}" restore Scripts/dots/*.toml 2>/dev/null || true
+  restore_patched_files
   exit $EXIT_CODE
 fi
 
-# Restore the TOML manifests to their original state to keep the git tree clean
-git -C "${scrDir}" restore Scripts/dots/*.toml 2>/dev/null || true
+# Restore the patched files to their committed (upstream) state to keep the git tree clean
+restore_patched_files
 
 
 # Set Thunar as default file manager
