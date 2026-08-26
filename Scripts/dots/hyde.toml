@@ -10,6 +10,13 @@ source_root = "Configs/.config"
 target_root = "${XDG_CONFIG_HOME}"
 paths = ["hyde/wallbash"]
 
+#? dconf profile for isolated HyDE settings
+[[hyde.files]]
+action = "preserve"
+source_root = "Configs/.config"
+target_root = "${XDG_CONFIG_HOME}"
+paths = ["dconf"]
+
 [[hyde.files]]
 clean_target = true
 action = "sync"
@@ -95,6 +102,7 @@ target_root = "${HOME}/.local/bin"
 paths = ["hyde-shell", "hydectl"]
 
 [grimblast]
+version = "26.08.17"
 source = "blob+https://raw.githubusercontent.com/hyprwm/contrib/refs/heads/main/grimblast/grimblast"
 action = "sync"
 target_root = "${HOME}/.local/lib/hyde/screenshot"
