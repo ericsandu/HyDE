@@ -30,7 +30,12 @@ jobs:
       - name: Merge Upstream Changes
         run: |
           git checkout master
-          git merge upstream/master -m "Automatically merged upstream changes" --no-edit
+          if ! git merge upstream/master -m "Automatically merged upstream changes" --no-edit; then
+            echo "Merge conflicts detected. Resolving in favor of current fork changes."
+            git checkout --ours .
+            git add -A
+            git commit -m "Automatically merged upstream changes (resolved conflicts in favor of fork)"
+          fi
 
       - name: Push to Fork Origin
         run: |
