@@ -17,47 +17,67 @@ if [[ $1 == "-h" || $1 == "--help" ]]; then
     exit 0
 fi
 
-inxi_output=$(inxi -Bx -c 0 2>/dev/null)
-readarray -t capacities < <(echo "$inxi_output" | grep -oP 'charge:[^(]*\(\K[0-9]+(?=%\))')
-battery_count=${#capacities[@]}
+average_capacity=""
+get_capacity() {
+    [[ -n "$average_capacity" ]] && return 0
+    local caps=()
+    readarray -t caps < <(inxi -B -c 0 2>/dev/null | grep -oP 'charge:.*?\b\K[0-9]+(?=(\.[0-9]+)?%)')
+    local count=${#caps[@]}
+    if (( count == 0 )); then
+        exit 0
+    fi
+    local total=0
+    for c in "${caps[@]}"; do
+        total=$((total + c))
+    done
+    average_capacity=$((total / count))
+}
 
-if ((battery_count == 0)); then
-    exit 0
-fi
+battery_status=""
+get_status() {
+    [[ -n "$battery_status" ]] && return 0
+    local raw_status
+    raw_status=$(inxi -Bx -c 0 2>/dev/null | grep -oiP 'status:\s*\K(charging|discharging|not charging|full|unknown|\w+)' | head -n 1)
+    case "${raw_status,,}" in
+        "charging") battery_status="Charging" ;;
+        "not charging") battery_status="Not Charging" ;;
+        "discharging") battery_status="Discharging" ;;
+        "full") battery_status="Full" ;;
+        *) battery_status="${raw_status^}" ;;
+    esac
+}
 
-total_capacity=0
-for cap in "${capacities[@]}"; do
-    total_capacity=$((total_capacity + cap))
-done
-average_capacity=$((total_capacity / battery_count))
-index=$((average_capacity / 10))
 charging_icons=("󰂆 " "󰂇 " "󰂈 " "󰂉 " "󰂊 " "󰂋 " "󰂋 " "󰂋 " "󰂋 " "󰂋 " "󰂅 ")
 discharging_icons=("󰂎" "󰁺" "󰁻" "󰁼" "󰁽" "󰁾" "󰁿" "󰂀" "󰂁" "󰂂" "󰁹")
 status_icons=("" "X" "󰂇")
-raw_status=$(echo "$inxi_output" | grep -oP 'status:\s*\K\w+' | head -n 1)
-battery_status="${raw_status^}"
 formats=("$@")
+
 output_format() {
     case "$1" in
         icon)
-            if
-                [[ $battery_status == "Charging" ]]
-            then
+            get_capacity
+            get_status
+            local index=$((average_capacity / 10))
+            if [[ $battery_status == "Charging" ]]; then
                 echo -n "${charging_icons[$index]} "
             else
                 echo -n "${discharging_icons[$index]} "
             fi
             ;;
         percentage)
+            get_capacity
             echo -n "$average_capacity% "
             ;;
         int)
+            get_capacity
             echo -n "$average_capacity "
             ;;
         status)
+            get_status
             echo -n "$battery_status "
             ;;
         status-icon)
+            get_status
             case "$battery_status" in
                 "Charging")
                     echo -n "${status_icons[0]} "
@@ -74,6 +94,7 @@ output_format() {
             ;;
     esac
 }
+
 if [ ${#formats[@]} -eq 0 ]; then
     output_format "icon"
 else
