@@ -406,13 +406,29 @@ get_rofi_pos() {
     [[ -n $HYPRLAND_INSTANCE_SIGNATURE ]] || return 1
     readarray -t curPos < <(hyprctl cursorpos -j | jq -r '.x,.y')
     eval "$(hyprctl -j monitors | jq -r '.[] | select(.focused==true) |
-        "monRes=(\(.width) \(.height) \(.scale) \(.x) \(.y)) offRes=(\(.reserved | join(" ")))"')"
+        "monRes=(\(.width) \(.height) \(.scale) \(.x) \(.y)) offRes=(\(.reserved | join(" "))) monTransform=\(.transform // 0)"')"
+    # hyprctl reports width/height as the monitor's pre-transform mode, not
+    # swapped for a 90/270-degree rotation (verified against a headless test
+    # output: transform=1 left width/height unchanged) -- so on a portrait
+    # monitor these still carried its landscape resolution, landing rofi
+    # menus off-screen near the bottom/right (#975).
+    if ((monTransform % 2 == 1)); then
+        local mon_swap="${monRes[0]}"
+        monRes[0]="${monRes[1]}"
+        monRes[1]="$mon_swap"
+    fi
     monRes[2]="$(get_monitor_scale "${monRes[2]}")"
     monRes[0]=$((monRes[0] * 100 / monRes[2]))
     monRes[1]=$((monRes[1] * 100 / monRes[2]))
     curPos[0]=$((curPos[0] - monRes[3]))
     curPos[1]=$((curPos[1] - monRes[4]))
-    offRes=("${offRes// / }")
+    # offRes is already a correctly-parsed 4-element array from the eval
+    # above ("${offRes// / }" with no index means offRes[0]: a no-op
+    # substitution that then collapsed the whole array down to that one
+    # element, discarding offRes[1..3] -- so any menu anchored north, east,
+    # or south of the cursor ignored reserved space on that edge (e.g. a
+    # bar) entirely. Caught by a reserved-margin test case with no HyDE
+    # issue number of its own; found while testing #975's fix.
     if [ "${curPos[0]}" -ge "$((monRes[0] / 2))" ]; then
         local x_pos="east"
         local x_off="-$((monRes[0] - curPos[0] - offRes[2]))"
@@ -490,6 +506,49 @@ wallbash_state_is_complete() {
     done
     return 0
 }
+##
+# Serializes wallpaper-backend invocations (awww/swww/waydeeper/hyprpaper) so
+# concurrent theme/wallpaper switches apply in order instead of racing.
+#
+# A plain "does the lock file exist" check-then-touch lock has two problems:
+# the check and the touch aren't atomic, and once a second invocation sees
+# the file it gives up immediately instead of waiting its turn, so its own
+# wallpaper apply is silently skipped while the rest of the theme still
+# switches. flock instead blocks the caller until the current holder exits,
+# and releases itself automatically (even on a crash) since it is tied to
+# the open file descriptor, not the file's mere existence on disk -- so,
+# unlike the old lock, deleting the lock file while it's held does not help
+# and should not be suggested: unlinking it just lets a second invocation
+# open and lock a *new* inode at the same path, running concurrently with
+# whatever still holds the old one.
+#
+# Callers must hold the lock for as long as their actual apply command
+# runs, not just until it's been backgrounded, or two overlapping switches
+# can still race to be the one left on screen.
+#
+# The lock file name is fixed (not derived from $0): "which wallpaper is on
+# screen" is one shared resource regardless of which backend script touches
+# it, so a switch to backend A must still serialize against one still
+# in-flight on backend B, e.g. right after WALLPAPER_BACKEND changes.
+#
+# Globals:
+#   Sets WALLPAPER_LOCK_FD, to be released via `flock -u "$WALLPAPER_LOCK_FD"`
+# Arguments:
+#   $1 - seconds to wait for a held lock before giving up (default: 15)
+# Returns:
+#   0 once the lock is held; exits 1 after printing an error on timeout
+##
+wallpaper_acquire_lock() {
+    local timeout="${1:-15}"
+    local lockDir="${XDG_RUNTIME_DIR:-/run/user/$(id -u)}/hyde"
+    mkdir -p "$lockDir"
+    exec {WALLPAPER_LOCK_FD}>"$lockDir/wallpaper.lock"
+    if ! flock -w "$timeout" "$WALLPAPER_LOCK_FD"; then
+        echo "Error: Another wallpaper backend is still running after waiting ${timeout}s." >&2
+        exit 1
+    fi
+}
+
 toml_write() {
     local config_file=$1
     local group=$2

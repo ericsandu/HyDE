@@ -11,7 +11,6 @@ import time
 import sys
 import hashlib
 import signal
-import shlex
 
 from pathlib import Path
 
@@ -40,18 +39,22 @@ if shutil.which("waybar") is None:
 HAS_SYSTEMD = os.path.isdir("/run/systemd/system")
 
 
+# The system entries were written without a leading "/", so they resolved
+# against the current directory instead of /usr: system-wide modules, layouts
+# and includes were never found, and a stray ./usr/share/waybar tree in the
+# directory waybar.py ran from was read instead.
 MODULE_DIRS = [
     os.path.join(str(xdg_config_home()), "waybar", "modules"),
     os.path.join(str(xdg_data_home()), "waybar", "modules"),
-    os.path.join("usr", "local", "share", "waybar", "modules"),
-    os.path.join("usr", "share", "waybar", "modules"),
+    os.path.join("/usr", "local", "share", "waybar", "modules"),
+    os.path.join("/usr", "share", "waybar", "modules"),
 ]
 
 LAYOUT_DIRS = [
     os.path.join(str(xdg_config_home()), "waybar", "layouts"),
     os.path.join(str(xdg_data_home()), "waybar", "layouts"),
-    os.path.join("usr", "local", "share", "waybar", "layouts"),
-    os.path.join("usr", "share", "waybar", "layouts"),
+    os.path.join("/usr", "local", "share", "waybar", "layouts"),
+    os.path.join("/usr", "share", "waybar", "layouts"),
 ]
 
 LAYOUT_IGNORE = ["test.jsonc", "dock#sample.jsonc"]
@@ -64,8 +67,8 @@ STYLE_DIRS = [
 INCLUDES_DIRS = [
     os.path.join(str(xdg_config_home()), "waybar", "includes"),
     os.path.join(str(xdg_data_home()), "waybar", "includes"),
-    os.path.join("usr", "local", "share", "waybar", "includes"),
-    os.path.join("usr", "share", "waybar", "includes"),
+    os.path.join("/usr", "local", "share", "waybar", "includes"),
+    os.path.join("/usr", "share", "waybar", "includes"),
 ]
 
 CONFIG_JSONC = Path(os.path.join(str(xdg_config_home()), "waybar", "config.jsonc"))
@@ -93,11 +96,31 @@ def get_file_hash(filepath):
     return sha256.hexdigest()
 
 
-def find_layout_files():
-    """Recursively find all layout files in the specified directories."""
+def in_backup_dir(path, root):
+    """Whether path lies in a "backup" directory below root.
+
+    Only the part below root counts: a home that itself sits under a directory
+    named backup must not turn every layout into a backup (#2133).
+    """
+    relative = os.path.relpath(path, start=root)
+    return "backup" in Path(relative).parts[:-1]
+
+
+def find_layout_files(include_backups=False):
+    """Recursively find all layout files in the specified directories.
+
+    backup_layout() writes its copies to layouts/backup/ inside a layout
+    directory, so a plain walk returns them as layouts. They sort before most
+    names ("backup/..."), which made the fallbacks that take layouts[0] or
+    match config.jsonc by hash settle on a backup, and --next/--prev then
+    crashed on it (HyDE-Project/HyDE#2133). Only list_layouts(), which shows
+    backups as their own entry, asks for them.
+    """
     layouts = []
     for layout_dir in LAYOUT_DIRS:
-        for root, _, files in os.walk(layout_dir):
+        for root, dirs, files in os.walk(layout_dir):
+            if not include_backups:
+                dirs[:] = [d for d in dirs if d != "backup"]
             for file in files:
                 if file.endswith(".jsonc") and file not in LAYOUT_IGNORE:
                     layouts.append(os.path.join(root, file))
@@ -346,24 +369,59 @@ def set_layout(layout):
     sys.exit(1)
 
 
+def apply_theme_layout():
+    """Temporarily apply a theme preset, preserving the user's layout/CSS pair."""
+    theme_layout = get_value_from_hypr_theme("$WAYBAR_LAYOUT")
+    saved_layout = get_state_value("WAYBAR_PRE_THEME_LAYOUT")
+    if theme_layout:
+        # Validate before saving anything; a missing preset must not claim the bar.
+        pair = next((p for p in list_layouts()["layouts"]
+                     if theme_layout in (p["name"], p["layout"]) and p["style"]), None)
+        if not pair:
+            logger.warning(f"Theme Waybar layout not found: {theme_layout}")
+            return
+        if not saved_layout:
+            # Save only on entry, not on wallpaper reloads or preset-to-preset switches.
+            set_state_value("WAYBAR_PRE_THEME_LAYOUT", get_current_layout_from_config())
+            set_state_value("WAYBAR_PRE_THEME_STYLE", get_state_value("WAYBAR_STYLE_PATH") or
+                            resolve_style_path(get_current_layout_from_config()))
+        _apply_layout(pair["layout"], pair["style"], theme_layout)
+    elif saved_layout:
+        if not os.path.isfile(saved_layout):
+            logger.warning(f"Cannot restore missing Waybar layout: {saved_layout}")
+            return
+        saved_style = get_state_value("WAYBAR_PRE_THEME_STYLE")
+        if not saved_style or not os.path.isfile(saved_style):
+            saved_style = resolve_style_path(saved_layout)
+        _apply_layout(saved_layout, saved_style, os.path.basename(saved_layout))
+        # Clear only after restoration succeeds; the next entry saves a fresh pair.
+        set_state_value("WAYBAR_PRE_THEME_LAYOUT", "")
+        set_state_value("WAYBAR_PRE_THEME_STYLE", "")
+
+
 def handle_layout_navigation(option):
     """Handle --next, --prev, and --set options."""
     layouts_data = list_layouts()
     layout_list = [
         layout["layout"] for layout in layouts_data["layouts"] if not layout.get("is_backup_entry")
     ]
-    current_layout = None
+    # get_state_value splits on the first "=" only, so a path containing one
+    # stays whole, and a missing state file is not an error (#2133).
+    current_layout = get_state_value("WAYBAR_LAYOUT_PATH")
 
-    with open(STATE_FILE, "r") as file:
-        for line in file:
-            if line.startswith("WAYBAR_LAYOUT_PATH="):
-                current_layout = line.split("=")[1].strip()
-                break
+    # Checked first: with no layouts there is nothing to cycle, whatever the
+    # state file says.
+    if not layout_list:
+        logger.error("No layouts found.")
+        return
 
     if not current_layout:
         logger.error("Current layout not found in state file.")
         return
 
+    # The re-cache result is the current layout: a hash match is the layout
+    # config.jsonc really holds, and without one the fallback has just copied
+    # the first layout into config.jsonc. Either way cycling continues from it.
     if current_layout not in layout_list:
         logger.warning("Current layout file not found, re-caching layouts.")
         current_layout = get_current_layout_from_config()
@@ -371,7 +429,12 @@ def handle_layout_navigation(option):
             logger.error("Failed to recache current layout.")
             return
 
-    current_index = layout_list.index(current_layout)
+    # A backup applied from the backup menu is the current layout but not in
+    # the cycle, so start the cycle from its ends rather than crash (#2133).
+    if current_layout in layout_list:
+        current_index = layout_list.index(current_layout)
+    else:
+        current_index = -1 if option == "--next" else 0
     if option == "--next":
         next_index = (current_index + 1) % len(layout_list)
         set_layout(layout_list[next_index])
@@ -387,7 +450,7 @@ def handle_layout_navigation(option):
 
 def list_layouts():
     """List all layouts with their matching styles and backups."""
-    layouts = find_layout_files()
+    layouts = find_layout_files(include_backups=True)
     layout_style_pairs = []
     backup_layouts = []
 
@@ -395,7 +458,7 @@ def list_layouts():
         for layout_dir in LAYOUT_DIRS:
             if layout.startswith(layout_dir):
                 relative_path = os.path.relpath(layout, start=layout_dir)
-                if "/backup/" in layout or "\\backup\\" in layout:
+                if in_backup_dir(layout, layout_dir):
                     name = relative_path.replace(".jsonc", "")
                     backup_layouts.append(
                         {
@@ -582,7 +645,7 @@ def rofi_file_selector(
         pattern = os.path.join(d, f"**/*{extension}") if recursive else os.path.join(d, f"*{extension}")
         found = [
             f for f in glob.glob(pattern, recursive=recursive)
-            if "/backup/" not in f and "\\backup\\" not in f
+            if not in_backup_dir(f, d)
         ]
         files.extend(found)
         file_roots.extend([d] * len(found))
@@ -953,7 +1016,8 @@ def get_value_from_hypr_theme(variable_name):
     logger.debug(f"Found hypr.theme at {hypr_theme_path}")
 
     try:
-        cmd = ["hyq", shlex.quote(hypr_theme_path), "--query", variable_name]
+        # argv already preserves spaces in theme names such as "Mac OS".
+        cmd = ["hyq", hypr_theme_path, "--query", variable_name]
         logger.debug(f"Running command: {' '.join(cmd)}")
 
         result = subprocess.run(cmd, capture_output=True, text=True)
@@ -1099,6 +1163,11 @@ def update_style(style_path):
         )
 
     if not style_path:
+        # Keep explicitly selected/restored CSS instead of deriving it from the layout.
+        style_path = get_state_value("WAYBAR_STYLE_PATH")
+        if style_path and not os.path.isfile(style_path):
+            style_path = None
+    if not style_path:
         current_layout = get_current_layout_from_config()
         logger.debug(f"Detected current layout: '{current_layout}'")
         if not current_layout:
@@ -1109,6 +1178,8 @@ def update_style(style_path):
         logger.error(f"Cannot reconcile style path: {style_path}")
         sys.exit(1)
     write_style_file(style_filepath, style_path)
+
+    set_state_value("WAYBAR_STYLE_PATH", style_path)
 
 
 def watch_waybar():
@@ -1283,6 +1354,9 @@ def main():
         sys.exit(0)
 
     if args.update:
+        # The color/theme hook uses --update; a theme may opt into a paired
+        # layout and stylesheet (Mac OS: HyDE #2089 / hyde-gallery #127).
+        apply_theme_layout()
         update_icon_size()
         update_border_radius()
         generate_includes()
